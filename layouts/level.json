@@ -1,0 +1,315 @@
+{
+	"name": "level",
+	"layers": [
+		{
+			"name": "Layer 0",
+			"overriden": 0,
+			"instances": [
+				{
+					"type": "line",
+					"properties": {
+						"initially-visible": true,
+						"initial-animation": "Animation 1",
+						"initial-frame": 0,
+						"enable-collisions": true,
+						"live-preview": false
+					},
+					"uid": 10,
+					"instanceVariables": {},
+					"behaviors": {},
+					"effects": {
+						"SetColor": {
+							"parameters": {
+								"color": [
+									0.8823529411764706,
+									0.03529411764705882,
+									0.6980392156862745,
+									1
+								]
+							}
+						}
+					},
+					"world": {
+						"x": -394.63033526343116,
+						"y": 485.2827199804759,
+						"width": 40,
+						"height": 40,
+						"originX": 0,
+						"originY": 0.5,
+						"color": [
+							1,
+							1,
+							1,
+							1
+						],
+						"angle": 0,
+						"zElevation": 0
+					}
+				},
+				{
+					"type": "back",
+					"properties": {
+						"initially-visible": true,
+						"initial-animation": "Default",
+						"initial-frame": 0,
+						"enable-collisions": true,
+						"live-preview": false
+					},
+					"uid": 9,
+					"instanceVariables": {},
+					"behaviors": {},
+					"effects": {
+						"BlurHorizontal": {
+							"parameters": {
+								"intensity": 1
+							}
+						},
+						"BlurVertical": {
+							"parameters": {
+								"intensity": 1
+							}
+						}
+					},
+					"world": {
+						"x": 395,
+						"y": 645,
+						"width": 978.9903573660306,
+						"height": 1327.755672177679,
+						"originX": 0.5,
+						"originY": 0.5,
+						"color": [
+							1,
+							1,
+							1,
+							1
+						],
+						"angle": 0,
+						"zElevation": 0
+					}
+				},
+				{
+					"type": "back_circle",
+					"properties": {
+						"svg-file": 451267712753244,
+						"initially-visible": true,
+						"origin": "center"
+					},
+					"uid": 3,
+					"instanceVariables": {},
+					"behaviors": {},
+					"world": {
+						"x": 399,
+						"y": 1067,
+						"width": 397.99713466460594,
+						"height": 397.99713466460594,
+						"originX": 0.5,
+						"originY": 0.5,
+						"color": [
+							1,
+							1,
+							1,
+							1
+						],
+						"angle": 0,
+						"zElevation": 0
+					}
+				},
+				{
+					"type": "rect",
+					"properties": {
+						"svg-file": 334465848889654,
+						"initially-visible": true,
+						"origin": "center"
+					},
+					"uid": 2,
+					"instanceVariables": {},
+					"behaviors": {},
+					"world": {
+						"x": -371,
+						"y": 286,
+						"width": 150,
+						"height": 150,
+						"originX": 0.5,
+						"originY": 0.5,
+						"color": [
+							1,
+							1,
+							1,
+							1
+						],
+						"angle": 0,
+						"zElevation": 0
+					}
+				},
+				{
+					"type": "debug_text",
+					"properties": {
+						"text": "A",
+						"enable-bbcode": true,
+						"font": "Impact",
+						"size": 38,
+						"line-height": 0,
+						"bold": false,
+						"italic": false,
+						"color": [
+							0.8823529411764706,
+							0.03529411764705882,
+							0.6980392156862745,
+							1
+						],
+						"horizontal-alignment": "center",
+						"vertical-alignment": "center",
+						"wrapping": "word",
+						"initially-visible": true,
+						"origin": "center"
+					},
+					"uid": 6,
+					"instanceVariables": {
+						"moveX": 0,
+						"moveY": 0,
+						"isMoving": false
+					},
+					"behaviors": {},
+					"world": {
+						"x": -351,
+						"y": 149,
+						"width": 183,
+						"height": 92,
+						"originX": 0.5,
+						"originY": 0.5,
+						"color": [
+							1,
+							1,
+							1,
+							1
+						],
+						"angle": 0,
+						"zElevation": 0
+					}
+				},
+				{
+					"type": "letter_circle",
+					"properties": {
+						"svg-file": 451267712753244,
+						"initially-visible": true,
+						"origin": "center"
+					},
+					"uid": 8,
+					"instanceVariables": {
+						"letter": "a",
+						"isActivated": false
+					},
+					"behaviors": {},
+					"effects": {
+						"SetColor": {
+							"parameters": {
+								"color": [
+									0.8823529411764706,
+									0.03529411764705882,
+									0.6980392156862745,
+									1
+								]
+							}
+						}
+					},
+					"world": {
+						"x": -415.77578191158966,
+						"y": 488.5101347740931,
+						"width": 86.45146042281516,
+						"height": 86.45146042281516,
+						"originX": 0.5,
+						"originY": 0.5,
+						"color": [
+							1,
+							1,
+							1,
+							1
+						],
+						"angle": 0,
+						"zElevation": 0
+					}
+				},
+				{
+					"type": "text_letter",
+					"properties": {
+						"text": "А",
+						"enable-bbcode": false,
+						"font": "Impact",
+						"size": 35,
+						"line-height": 0,
+						"bold": false,
+						"italic": false,
+						"color": [
+							0,
+							0,
+							0,
+							1
+						],
+						"horizontal-alignment": "center",
+						"vertical-alignment": "center",
+						"wrapping": "word",
+						"initially-visible": true,
+						"origin": "center"
+					},
+					"uid": 5,
+					"instanceVariables": {},
+					"behaviors": {},
+					"world": {
+						"x": -404.1395800848103,
+						"y": 426.30120962323446,
+						"width": 125,
+						"height": 79,
+						"originX": 0.5,
+						"originY": 0.5,
+						"color": [
+							1,
+							1,
+							1,
+							1
+						],
+						"angle": 0,
+						"zElevation": 0
+					}
+				}
+			],
+			"sid": 880942336797922,
+			"effectTypes": [],
+			"isInitiallyVisible": true,
+			"color": [
+				1,
+				1,
+				1,
+				1
+			],
+			"backgroundColor": [
+				1,
+				1,
+				1,
+				1
+			],
+			"isTransparent": false,
+			"parallaxX": 1,
+			"parallaxY": 1,
+			"scaleRate": 1,
+			"forceOwnTexture": false,
+			"renderingMode": "3d",
+			"useRenderCells": false,
+			"blendMode": "normal",
+			"global": false
+		}
+	],
+	"sid": 535678662413806,
+	"nonworld-instances": [
+		{
+			"type": "JSON",
+			"properties": {},
+			"uid": 4,
+			"instanceVariables": {}
+		}
+	],
+	"effectTypes": [],
+	"width": 800,
+	"height": 1280,
+	"unboundedScrolling": false,
+	"eventSheet": "level"
+}

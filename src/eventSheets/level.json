@@ -1,0 +1,142 @@
+{
+	"name": "level",
+	"events": [
+		{
+			"functionName": "render_level",
+			"functionDescription": "",
+			"functionCategory": "level",
+			"functionReturnType": "none",
+			"functionIsAsync": true,
+			"functionParameters": [
+				{
+					"name": "levelJSON",
+					"type": "string",
+					"initialValue": "",
+					"comment": "",
+					"sid": 554254424964783
+				}
+			],
+			"eventType": "function-block",
+			"conditions": [],
+			"actions": [],
+			"sid": 336892454736497,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "for-each",
+							"objectClass": "System",
+							"sid": 734514891921045,
+							"parameters": {
+								"object": "rect"
+							}
+						}
+					],
+					"actions": [
+						{
+							"id": "destroy",
+							"objectClass": "rect",
+							"sid": 730747715068389
+						}
+					],
+					"sid": 669323269871539
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "for-each",
+							"objectClass": "System",
+							"sid": 297230598914251,
+							"parameters": {
+								"object": "letter_circle"
+							}
+						}
+					],
+					"actions": [
+						{
+							"id": "destroy",
+							"objectClass": "letter_circle",
+							"sid": 523866620655027
+						}
+					],
+					"sid": 386588668755591
+				},
+				{
+					"eventType": "block",
+					"conditions": [],
+					"actions": [
+						{
+							"type": "script",
+							"script": "let levelData = JSON.parse(localVars.levelJSON);\nlet letters = levelData.letters;\nlet w=0, h=0;\n\n// получить размер дерева\nfor (let i=0; i<levelData.words.length; i++) {\n\tlet wordData = levelData.words[i];\n\tw = Math.max(w, wordData.align === \"hor\" ? wordData.x + wordData.word.length : wordData.x + 1);\n\th = Math.max(h, wordData.align === \"hor\" ? wordData.y + 1 : wordData.y + wordData.word.length);\n}\n\n\n// генерировать дерево\nlet wordTree = new Array(w);\nfor (let i=0; i<w; i++) wordTree[i] = new Array(h);\nfor (let i=0; i<levelData.words.length; i++) {\n\tlet wordData = levelData.words[i];\n\tif (wordData.align === \"ver\") for (let j=0; j<wordData.word.length; j++) wordTree[wordData.x][wordData.y + j] = wordData.word[j]; \n\tif (wordData.align === \"hor\") for (let j=0; j<wordData.word.length; j++) wordTree[wordData.x + j][wordData.y] = wordData.word[j]; \n\t// alert(JSON.stringify(wordTree));\n}\n\n\n// построить дерево\nconst center = 400;\nconst size = 750; // размер, за который не должно вылезать дерево, оно скейлится\nconst minSize = 150; // минимальный размер одной ячейки\nfor (let x=0; x<w; x++) for (let y=0; y<h; y++) {\n\tif (wordTree[x][y] != null) {\n\t\tlet rect = runtime.objects.rect.createInstance(0, 0, 0);\n\t\trect.width = rect.height = Math.min(minSize, size / w);\n\t\trect.x = center - rect.width * ((w-1)/2 - x);\n\t\trect.y = (1 + y) * rect.height;\n\t\t\n\t\t// debug\n\t\t// let t = runtime.objects.Text.createInstance(0, rect.x, rect.y);\n\t\t// t.text = wordTree[x][y];\n\t}\n}"
+						}
+					],
+					"sid": 267413193243178
+				},
+				{
+					"eventType": "block",
+					"conditions": [],
+					"actions": [
+						{
+							"id": "set-position-to-another-object",
+							"objectClass": "debug_text",
+							"sid": 741310892890141,
+							"parameters": {
+								"object": "rect",
+								"image-point-optional": "0"
+							}
+						}
+					],
+					"sid": 767562137049585
+				}
+			]
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-start-of-layout",
+					"objectClass": "System",
+					"sid": 496702700813079
+				}
+			],
+			"actions": [
+				{
+					"id": "request-project-file",
+					"objectClass": "AJAX",
+					"sid": 534351252619719,
+					"parameters": {
+						"tag": "\"level\"",
+						"file": "level.json"
+					}
+				}
+			],
+			"sid": 768482466298649
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-completed",
+					"objectClass": "AJAX",
+					"sid": 272360982757099,
+					"parameters": {
+						"tag": "\"level\""
+					}
+				}
+			],
+			"actions": [
+				{
+					"callFunction": "render_level",
+					"sid": 772849132434887,
+					"parameters": [
+						"AJAX.LastData"
+					]
+				}
+			],
+			"sid": 296603644315132
+		}
+	],
+	"sid": 742068505702549
+}

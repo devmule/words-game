@@ -1,0 +1,16 @@
+{
+	"name": "letter_circle",
+	"plugin-id": "SVGPicture",
+	"sid": 397624393469102,
+	"isGlobal": false,
+	"instanceVariables": [
+		{
+			"name": "letter",
+			"type": "string",
+			"desc": "",
+			"sid": 129595068327338
+		}
+	],
+	"behaviorTypes": [],
+	"effectTypes": []
+}
