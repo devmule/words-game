@@ -2,6 +2,26 @@
 	"name": "level",
 	"events": [
 		{
+			"eventType": "variable",
+			"name": "COLLECTED_STRING",
+			"type": "string",
+			"initialValue": "",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": false,
+			"sid": 586755047294946
+		},
+		{
+			"eventType": "variable",
+			"name": "lastLineUID",
+			"type": "number",
+			"initialValue": "-1",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": false,
+			"sid": 105452699942470
+		},
+		{
 			"functionName": "render_level",
 			"functionDescription": "",
 			"functionCategory": "level",
@@ -18,7 +38,16 @@
 			],
 			"eventType": "function-block",
 			"conditions": [],
-			"actions": [],
+			"actions": [
+				{
+					"id": "parse",
+					"objectClass": "JSON",
+					"sid": 837620427788443,
+					"parameters": {
+						"data": "levelJSON"
+					}
+				}
+			],
 			"sid": 336892454736497,
 			"children": [
 				{
@@ -69,26 +98,10 @@
 					"actions": [
 						{
 							"type": "script",
-							"script": "let levelData = JSON.parse(localVars.levelJSON);\nlet letters = levelData.letters;\nlet w=0, h=0;\n\n// получить размер дерева\nfor (let i=0; i<levelData.words.length; i++) {\n\tlet wordData = levelData.words[i];\n\tw = Math.max(w, wordData.align === \"hor\" ? wordData.x + wordData.word.length : wordData.x + 1);\n\th = Math.max(h, wordData.align === \"hor\" ? wordData.y + 1 : wordData.y + wordData.word.length);\n}\n\n\n// генерировать дерево\nlet wordTree = new Array(w);\nfor (let i=0; i<w; i++) wordTree[i] = new Array(h);\nfor (let i=0; i<levelData.words.length; i++) {\n\tlet wordData = levelData.words[i];\n\tif (wordData.align === \"ver\") for (let j=0; j<wordData.word.length; j++) wordTree[wordData.x][wordData.y + j] = wordData.word[j]; \n\tif (wordData.align === \"hor\") for (let j=0; j<wordData.word.length; j++) wordTree[wordData.x + j][wordData.y] = wordData.word[j]; \n\t// alert(JSON.stringify(wordTree));\n}\n\n\n// построить дерево\nconst center = 400;\nconst size = 750; // размер, за который не должно вылезать дерево, оно скейлится\nconst minSize = 150; // минимальный размер одной ячейки\nfor (let x=0; x<w; x++) for (let y=0; y<h; y++) {\n\tif (wordTree[x][y] != null) {\n\t\tlet rect = runtime.objects.rect.createInstance(0, 0, 0);\n\t\trect.width = rect.height = Math.min(minSize, size / w);\n\t\trect.x = center - rect.width * ((w-1)/2 - x);\n\t\trect.y = (1 + y) * rect.height;\n\t\t\n\t\t// debug\n\t\t// let t = runtime.objects.Text.createInstance(0, rect.x, rect.y);\n\t\t// t.text = wordTree[x][y];\n\t}\n}"
+							"script": "let levelData = JSON.parse(localVars.levelJSON);\nlet letters = levelData.letters;\n\n// ==============================\n// построить сетку для кроссворда\nlet w=levelData.w, h=levelData.h;\n\n// генерировать дерево\nlet wordTree = new Array(w);\nfor (let i=0; i<w; i++) wordTree[i] = new Array(h);\nfor (let i=0; i<levelData.words.length; i++) {\n\tlet wordData = levelData.words[i];\n\tif (wordData.align === \"ver\") for (let j=0; j<wordData.word.length; j++) wordTree[wordData.x][wordData.y + j] = wordData.word[j]; \n\tif (wordData.align === \"hor\") for (let j=0; j<wordData.word.length; j++) wordTree[wordData.x + j][wordData.y] = wordData.word[j]; \n\t// alert(JSON.stringify(wordTree));\n}\n\n\n// построить дерево\nconst center = 400;\nconst size = 750; // размер, за который не должно вылезать дерево, оно скейлится\nconst minSize = 150; // минимальный размер одной ячейки\nfor (let x=0; x<w; x++) for (let y=0; y<h; y++) {\n\tif (wordTree[x][y] != null) {\n\t\tlet rect = runtime.objects.rect.createInstance(0,0,0);\n\t\trect.width = rect.height = Math.min(minSize, size / w);\n\t\trect.x = center - rect.width * ((w-1)/2 - x);\n\t\trect.y = (1 + y) * rect.height;\n\t}\n}\n\n// ==============================\n// построить список букв\nconst backCircle = runtime.objects.back_circle.getFirstInstance();\nconst distance = 150;\nfor (let i=0; i<letters.length; i++) {\n\tlet ltr = letters[i];\n\tlet rot = Math.PI * 2 * (i / letters.length) - Math.PI / 2;\n\tlet letter_circle = runtime.objects.letter_circle.createInstance(0,0,0);\n\tletter_circle.x = backCircle.x + distance * Math.cos(rot);\n\tletter_circle.y = backCircle.y + distance * Math.sin(rot) - 15;\n\tletter_circle.instVars.letter = ltr;\n\tlet letter_text = runtime.objects.text_letter.createInstance(0,letter_circle.x,letter_circle.y-5);\n\tletter_text.text = ltr.toUpperCase();\n} "
 						}
 					],
 					"sid": 267413193243178
-				},
-				{
-					"eventType": "block",
-					"conditions": [],
-					"actions": [
-						{
-							"id": "set-position-to-another-object",
-							"objectClass": "debug_text",
-							"sid": 741310892890141,
-							"parameters": {
-								"object": "rect",
-								"image-point-optional": "0"
-							}
-						}
-					],
-					"sid": 767562137049585
 				}
 			]
 		},
@@ -136,6 +149,499 @@
 				}
 			],
 			"sid": 296603644315132
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "is-boolean-instance-variable-set",
+					"objectClass": "letter_circle",
+					"sid": 183215214914722,
+					"parameters": {
+						"instance-variable": "isActivated"
+					},
+					"isInverted": true
+				}
+			],
+			"actions": [
+				{
+					"id": "set-effect-enabled",
+					"objectClass": "letter_circle",
+					"sid": 295379111935413,
+					"parameters": {
+						"mode": "disable",
+						"effect": "\"SetColor\""
+					}
+				}
+			],
+			"sid": 149503685005918
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "is-boolean-instance-variable-set",
+					"objectClass": "letter_circle",
+					"sid": 320535568027899,
+					"parameters": {
+						"instance-variable": "isActivated"
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "set-effect-enabled",
+					"objectClass": "letter_circle",
+					"sid": 803503463539207,
+					"parameters": {
+						"mode": "enable",
+						"effect": "\"SetColor\""
+					}
+				}
+			],
+			"sid": 866893335935131
+		},
+		{
+			"eventType": "comment",
+			"text": "\nсобирание строки"
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "is-in-touch",
+					"objectClass": "Touch",
+					"sid": 669636545789810
+				}
+			],
+			"actions": [],
+			"sid": 270626053114317,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "pick-by-unique-id",
+							"objectClass": "line",
+							"sid": 273933709711646,
+							"parameters": {
+								"unique-id": "lastLineUID"
+							}
+						}
+					],
+					"actions": [
+						{
+							"id": "set-angle-toward-position",
+							"objectClass": "line",
+							"sid": 192017300628582,
+							"parameters": {
+								"x": "Touch.X",
+								"y": "Touch.Y"
+							}
+						},
+						{
+							"id": "set-width",
+							"objectClass": "line",
+							"sid": 444023187195608,
+							"parameters": {
+								"width": "distance(Touch.X, Touch.Y, Self.X, Self.Y)"
+							}
+						}
+					],
+					"sid": 136407363771234
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "is-touching-object",
+							"objectClass": "Touch",
+							"sid": 809199652860202,
+							"parameters": {
+								"object": "letter_circle"
+							}
+						},
+						{
+							"id": "is-boolean-instance-variable-set",
+							"objectClass": "letter_circle",
+							"sid": 525611744376595,
+							"parameters": {
+								"instance-variable": "isActivated"
+							},
+							"isInverted": true
+						}
+					],
+					"actions": [
+						{
+							"id": "set-boolean-instvar",
+							"objectClass": "letter_circle",
+							"sid": 896977133925200,
+							"parameters": {
+								"instance-variable": "isActivated",
+								"value": "true"
+							}
+						},
+						{
+							"id": "set-eventvar-value",
+							"objectClass": "System",
+							"sid": 833946957420145,
+							"parameters": {
+								"variable": "COLLECTED_STRING",
+								"value": "COLLECTED_STRING & letter_circle.letter"
+							}
+						}
+					],
+					"sid": 679326811040493,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "pick-by-unique-id",
+									"objectClass": "line",
+									"sid": 429902869261981,
+									"parameters": {
+										"unique-id": "lastLineUID"
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-angle-toward-position",
+									"objectClass": "line",
+									"sid": 656430558353095,
+									"parameters": {
+										"x": "letter_circle.x",
+										"y": "letter_circle.y"
+									}
+								},
+								{
+									"id": "set-width",
+									"objectClass": "line",
+									"sid": 490227058164836,
+									"parameters": {
+										"width": "distance(letter_circle.X, letter_circle.Y, Self.X, Self.Y)"
+									}
+								}
+							],
+							"sid": 538262984556664
+						},
+						{
+							"eventType": "block",
+							"conditions": [],
+							"actions": [
+								{
+									"id": "create-object",
+									"objectClass": "System",
+									"sid": 908091665000905,
+									"parameters": {
+										"object-to-create": "line",
+										"layer": "0",
+										"x": "letter_circle.x",
+										"y": "letter_circle.y",
+										"create-hierarchy": false
+									}
+								},
+								{
+									"id": "move-to-bottom",
+									"objectClass": "line",
+									"sid": 650614564809405
+								},
+								{
+									"id": "move-to-bottom",
+									"objectClass": "back_circle",
+									"sid": 360994969166522
+								},
+								{
+									"id": "move-to-bottom",
+									"objectClass": "back",
+									"sid": 306640604187756
+								},
+								{
+									"id": "set-eventvar-value",
+									"objectClass": "System",
+									"sid": 599339944721762,
+									"parameters": {
+										"variable": "lastLineUID",
+										"value": "line.UID"
+									}
+								}
+							],
+							"sid": 953998795279453
+						}
+					]
+				}
+			]
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "is-in-touch",
+					"objectClass": "Touch",
+					"sid": 208175083407452,
+					"isInverted": true
+				},
+				{
+					"id": "trigger-once-while-true",
+					"objectClass": "System",
+					"sid": 915616953872118
+				}
+			],
+			"actions": [],
+			"sid": 601009278656688,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "compare-eventvar",
+							"objectClass": "System",
+							"sid": 517463306962910,
+							"parameters": {
+								"variable": "lastLineUID",
+								"comparison": 5,
+								"value": "0"
+							}
+						}
+					],
+					"actions": [],
+					"sid": 829512766063893,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "for-each",
+									"objectClass": "System",
+									"sid": 404432320208669,
+									"parameters": {
+										"object": "letter_circle"
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "set-boolean-instvar",
+									"objectClass": "letter_circle",
+									"sid": 385274187319285,
+									"parameters": {
+										"instance-variable": "isActivated",
+										"value": "false"
+									}
+								}
+							],
+							"sid": 770725168806376
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "for-each",
+									"objectClass": "System",
+									"sid": 951381745057627,
+									"parameters": {
+										"object": "line"
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "destroy",
+									"objectClass": "line",
+									"sid": 387599569137301
+								}
+							],
+							"sid": 108858036855874
+						},
+						{
+							"eventType": "block",
+							"conditions": [],
+							"actions": [
+								{
+									"callFunction": "on_word",
+									"sid": 916158105429834,
+									"parameters": [
+										"COLLECTED_STRING"
+									]
+								},
+								{
+									"id": "set-eventvar-value",
+									"objectClass": "System",
+									"sid": 395497110006879,
+									"parameters": {
+										"variable": "COLLECTED_STRING",
+										"value": "\"\""
+									}
+								},
+								{
+									"id": "set-eventvar-value",
+									"objectClass": "System",
+									"sid": 607743577359996,
+									"parameters": {
+										"variable": "lastLineUID",
+										"value": "-1"
+									}
+								}
+							],
+							"sid": 487603349408973
+						}
+					]
+				}
+			]
+		},
+		{
+			"functionName": "on_word",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "none",
+			"functionIsAsync": false,
+			"functionParameters": [
+				{
+					"name": "word",
+					"type": "string",
+					"initialValue": "",
+					"comment": "",
+					"sid": 745456622344506
+				}
+			],
+			"eventType": "function-block",
+			"conditions": [],
+			"actions": [],
+			"sid": 130263952991713,
+			"children": [
+				{
+					"eventType": "variable",
+					"name": "json",
+					"type": "string",
+					"initialValue": "",
+					"comment": "",
+					"isStatic": false,
+					"isConstant": false,
+					"sid": 684564443652100
+				},
+				{
+					"eventType": "block",
+					"conditions": [],
+					"actions": [
+						{
+							"id": "set-eventvar-value",
+							"objectClass": "System",
+							"sid": 653237012884402,
+							"parameters": {
+								"variable": "json",
+								"value": "JSON.GetAsCompactString(\"\")"
+							}
+						},
+						{
+							"id": "wait",
+							"objectClass": "System",
+							"sid": 692313784836218,
+							"parameters": {
+								"seconds": "0.1"
+							}
+						},
+						{
+							"type": "script",
+							"script": "let json = JSON.parse(localVars.json);\nlet w = json.w, h = json.h;\n\nfor (let i=0; i<json.words.length; i++) {\n\tlet wrd = json.words[i];\n\tif (wrd.word === localVars.word) {\n\t\tjson.words.splice(i, 1);\n\t\tlocalVars.json = JSON.stringify(json);\n\t\t\n\t\tconst backCircle = runtime.objects.back_circle.getFirstInstance();\n\t\tconst center = 400;\n\t\tconst size = 750; const minSize = 150;\n\t\tfor (let j=0; j<wrd.word.length; j++) {\n\t\t\n\t\t\tlet new_text = runtime.objects.debug_text.createInstance(0,0,0);\n\t\t\tnew_text.width = new_text.height = Math.min(minSize, size / w);\n\t\t\tnew_text.x = backCircle.x;\n\t\t\tnew_text.y = backCircle.y;\n\t\t\t\n\t\t\tnew_text.instVars.moveX = center - new_text.width * ((w-1)/2 - wrd.x - (wrd.align === \"hor\" ? j : 0));\n\t\t\tnew_text.instVars.moveY = (1 + wrd.y + (wrd.align === \"ver\" ? j : 0)) * new_text.height;\n\t\t\t\n\t\t\tsetTimeout(() => new_text.instVars.isMoving = true, 200 * j);\n\t\t\t\n\t\t\tnew_text.text = wrd.word[j].toUpperCase();\n\t\t}\n\t\t\n\t\tbreak;\n\t}\n}"
+						},
+						{
+							"id": "wait",
+							"objectClass": "System",
+							"sid": 282547600757326,
+							"parameters": {
+								"seconds": "0.1"
+							}
+						},
+						{
+							"id": "parse",
+							"objectClass": "JSON",
+							"sid": 784125223022792,
+							"parameters": {
+								"data": "json"
+							}
+						}
+					],
+					"sid": 257905919037238
+				}
+			]
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "for-each",
+					"objectClass": "System",
+					"sid": 527789349269185,
+					"parameters": {
+						"object": "debug_text"
+					}
+				},
+				{
+					"id": "is-boolean-instance-variable-set",
+					"objectClass": "debug_text",
+					"sid": 370167474381660,
+					"parameters": {
+						"instance-variable": "isMoving"
+					}
+				}
+			],
+			"actions": [],
+			"sid": 334147098020815,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [],
+					"actions": [
+						{
+							"id": "move-at-angle",
+							"objectClass": "debug_text",
+							"sid": 834461674279262,
+							"parameters": {
+								"angle": "angle(Self.X, Self.Y, Self.moveX, Self.moveY)",
+								"distance": "distance(Self.X, Self.Y, Self.moveX, Self.moveY) * dt * 4"
+							}
+						}
+					],
+					"sid": 466731576621067
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "compare-two-values",
+							"objectClass": "System",
+							"sid": 274170668686602,
+							"parameters": {
+								"first-value": "distance(debug_text.X, debug_text.Y, debug_text.moveX, debug_text.moveY)",
+								"comparison": 2,
+								"second-value": "10"
+							}
+						}
+					],
+					"actions": [
+						{
+							"id": "set-boolean-instvar",
+							"objectClass": "debug_text",
+							"sid": 193332706695030,
+							"parameters": {
+								"instance-variable": "isMoving",
+								"value": "false"
+							}
+						},
+						{
+							"id": "set-position",
+							"objectClass": "debug_text",
+							"sid": 199040062227667,
+							"parameters": {
+								"x": "Self.moveX",
+								"y": "Self.moveY"
+							}
+						}
+					],
+					"sid": 818838610095469
+				}
+			]
 		}
 	],
 	"sid": 742068505702549

@@ -24,14 +24,6 @@
 		},
 		{
 			"type": "plugin",
-			"id": "Arr",
-			"name": "Array",
-			"author": "Scirra",
-			"version": "r251.2",
-			"bundled": false
-		},
-		{
-			"type": "plugin",
 			"id": "Text",
 			"name": "Text",
 			"author": "Scirra",
@@ -45,6 +37,46 @@
 			"author": "Scirra",
 			"version": "r251.2",
 			"bundled": false
+		},
+		{
+			"type": "plugin",
+			"id": "Sprite",
+			"name": "Sprite",
+			"author": "Scirra",
+			"version": "r251.2",
+			"bundled": false
+		},
+		{
+			"type": "plugin",
+			"id": "Touch",
+			"name": "Touch",
+			"author": "Scirra",
+			"version": "r251.2",
+			"bundled": false
+		},
+		{
+			"type": "effect",
+			"id": "setcolor",
+			"name": "Set color",
+			"author": "Scirra",
+			"version": "r251.2",
+			"bundled": false
+		},
+		{
+			"type": "effect",
+			"id": "blurhorizontal",
+			"name": "Blur horizontal",
+			"author": "Scirra",
+			"version": "r251.2",
+			"bundled": false
+		},
+		{
+			"type": "effect",
+			"id": "blurvertical",
+			"name": "Blur vertical",
+			"author": "Scirra",
+			"version": "r251.2",
+			"bundled": false
 		}
 	],
 	"uniqueId": "kxds2r8qp6s",
@@ -53,10 +85,13 @@
 			"back_circle",
 			"JSON",
 			"rect",
-			"wordArray",
 			"debug_text",
 			"AJAX",
-			"letter_circle"
+			"letter_circle",
+			"text_letter",
+			"back",
+			"line",
+			"Touch"
 		],
 		"subfolders": []
 	},

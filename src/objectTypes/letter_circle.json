@@ -9,8 +9,19 @@
 			"type": "string",
 			"desc": "",
 			"sid": 129595068327338
+		},
+		{
+			"name": "isActivated",
+			"type": "boolean",
+			"desc": "",
+			"sid": 143043384116451
 		}
 	],
 	"behaviorTypes": [],
-	"effectTypes": []
+	"effectTypes": [
+		{
+			"effectId": "setcolor",
+			"name": "SetColor"
+		}
+	]
 }

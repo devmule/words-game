@@ -6,6 +6,88 @@
 			"overriden": 0,
 			"instances": [
 				{
+					"type": "line",
+					"properties": {
+						"initially-visible": true,
+						"initial-animation": "Animation 1",
+						"initial-frame": 0,
+						"enable-collisions": true,
+						"live-preview": false
+					},
+					"uid": 10,
+					"instanceVariables": {},
+					"behaviors": {},
+					"effects": {
+						"SetColor": {
+							"parameters": {
+								"color": [
+									0.8823529411764706,
+									0.03529411764705882,
+									0.6980392156862745,
+									1
+								]
+							}
+						}
+					},
+					"world": {
+						"x": -394.63033526343116,
+						"y": 485.2827199804759,
+						"width": 40,
+						"height": 40,
+						"originX": 0,
+						"originY": 0.5,
+						"color": [
+							1,
+							1,
+							1,
+							1
+						],
+						"angle": 0,
+						"zElevation": 0
+					}
+				},
+				{
+					"type": "back",
+					"properties": {
+						"initially-visible": true,
+						"initial-animation": "Default",
+						"initial-frame": 0,
+						"enable-collisions": true,
+						"live-preview": false
+					},
+					"uid": 9,
+					"instanceVariables": {},
+					"behaviors": {},
+					"effects": {
+						"BlurHorizontal": {
+							"parameters": {
+								"intensity": 1
+							}
+						},
+						"BlurVertical": {
+							"parameters": {
+								"intensity": 1
+							}
+						}
+					},
+					"world": {
+						"x": 395,
+						"y": 645,
+						"width": 978.9903573660306,
+						"height": 1327.755672177679,
+						"originX": 0.5,
+						"originY": 0.5,
+						"color": [
+							1,
+							1,
+							1,
+							1
+						],
+						"angle": 0,
+						"zElevation": 0
+					}
+				},
+				{
 					"type": "back_circle",
 					"properties": {
 						"svg-file": 451267712753244,
@@ -43,8 +125,8 @@
 					"instanceVariables": {},
 					"behaviors": {},
 					"world": {
-						"x": -175,
-						"y": 318,
+						"x": -371,
+						"y": 286,
 						"width": 150,
 						"height": 150,
 						"originX": 0.5,
@@ -62,17 +144,17 @@
 				{
 					"type": "debug_text",
 					"properties": {
-						"text": "Text",
+						"text": "A",
 						"enable-bbcode": true,
-						"font": "Arial",
-						"size": 12,
+						"font": "Impact",
+						"size": 38,
 						"line-height": 0,
 						"bold": false,
 						"italic": false,
 						"color": [
-							0,
-							0,
-							0,
+							0.8823529411764706,
+							0.03529411764705882,
+							0.6980392156862745,
 							1
 						],
 						"horizontal-alignment": "center",
@@ -82,11 +164,15 @@
 						"origin": "center"
 					},
 					"uid": 6,
-					"instanceVariables": {},
+					"instanceVariables": {
+						"moveX": 0,
+						"moveY": 0,
+						"isMoving": false
+					},
 					"behaviors": {},
 					"world": {
-						"x": -212,
-						"y": 93,
+						"x": -351,
+						"y": 149,
 						"width": 183,
 						"height": 92,
 						"originX": 0.5,
@@ -110,14 +196,69 @@
 					},
 					"uid": 8,
 					"instanceVariables": {
-						"letter": "a"
+						"letter": "a",
+						"isActivated": false
 					},
 					"behaviors": {},
+					"effects": {
+						"SetColor": {
+							"parameters": {
+								"color": [
+									0.8823529411764706,
+									0.03529411764705882,
+									0.6980392156862745,
+									1
+								]
+							}
+						}
+					},
 					"world": {
-						"x": -138,
-						"y": 645,
+						"x": -415.77578191158966,
+						"y": 488.5101347740931,
 						"width": 86.45146042281516,
 						"height": 86.45146042281516,
+						"originX": 0.5,
+						"originY": 0.5,
+						"color": [
+							1,
+							1,
+							1,
+							1
+						],
+						"angle": 0,
+						"zElevation": 0
+					}
+				},
+				{
+					"type": "text_letter",
+					"properties": {
+						"text": "А",
+						"enable-bbcode": false,
+						"font": "Impact",
+						"size": 35,
+						"line-height": 0,
+						"bold": false,
+						"italic": false,
+						"color": [
+							0,
+							0,
+							0,
+							1
+						],
+						"horizontal-alignment": "center",
+						"vertical-alignment": "center",
+						"wrapping": "word",
+						"initially-visible": true,
+						"origin": "center"
+					},
+					"uid": 5,
+					"instanceVariables": {},
+					"behaviors": {},
+					"world": {
+						"x": -404.1395800848103,
+						"y": 426.30120962323446,
+						"width": 125,
+						"height": 79,
 						"originX": 0.5,
 						"originY": 0.5,
 						"color": [
@@ -163,16 +304,6 @@
 			"type": "JSON",
 			"properties": {},
 			"uid": 4,
-			"instanceVariables": {}
-		},
-		{
-			"type": "wordArray",
-			"properties": {
-				"width": 10,
-				"height": 1,
-				"depth": 1
-			},
-			"uid": 5,
 			"instanceVariables": {}
 		}
 	],
