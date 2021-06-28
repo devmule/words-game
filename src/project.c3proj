@@ -103,13 +103,13 @@
 	},
 	"layouts": {
 		"items": [
-			"level"
+			"lLevel"
 		],
 		"subfolders": []
 	},
 	"eventSheets": {
 		"items": [
-			"level"
+			"eLevel"
 		],
 		"subfolders": []
 	},

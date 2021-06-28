@@ -1,5 +1,5 @@
 {
-	"name": "level",
+	"name": "lLevel",
 	"layers": [
 		{
 			"name": "Layer 0",
@@ -311,5 +311,5 @@
 	"width": 800,
 	"height": 1280,
 	"unboundedScrolling": false,
-	"eventSheet": "level"
+	"eventSheet": "eLevel"
 }
