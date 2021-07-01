@@ -18,6 +18,7 @@ export class GameLayer extends cc.Component {
 
         let charControllerNode = this.node.getChildByName('CharController') as cc.Node;
         this.charController = charControllerNode.getComponent(CharController) as CharController;
+        this.charController.node.on(types.Event.WORD_CREATED, this.onWordCreated, this);
 
         // fixme temporary
         this.initLevel({
@@ -36,6 +37,10 @@ export class GameLayer extends cc.Component {
             "w": 11,
             "h": 7
         });
+    }
+
+    onWordCreated(word: string) {
+        this.wordsTree?.onWordGuess(word);
     }
 
     initLevel(level: types.LevelData) {

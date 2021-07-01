@@ -343,6 +343,20 @@
     },
     "_enabled": true,
     "__prefab": null,
+    "defaultColor": {
+      "__type__": "cc.Color",
+      "r": 233,
+      "g": 151,
+      "b": 220,
+      "a": 255
+    },
+    "activeColor": {
+      "__type__": "cc.Color",
+      "r": 243,
+      "g": 10,
+      "b": 140,
+      "a": 255
+    },
     "_id": ""
   },
   {

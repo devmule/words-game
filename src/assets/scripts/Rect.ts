@@ -25,7 +25,7 @@ export class Rect extends cc.Component {
 
     set text(text: string) {
         let textComponent = this.textNode?.getComponent(cc.RichText);
-        if (textComponent) textComponent.string = text;
+        if (textComponent) textComponent.string = text.toUpperCase();
         else throw new Error(`Rectangle error: Text component is undefined!`);
     }
 

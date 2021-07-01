@@ -8,7 +8,7 @@ const {ccclass, property} = cc._decorator;
 export class WordsTree extends cc.Component {
 
     private level: types.LevelData | undefined;
-    private tree: (Node | null)[][] = [];
+    private tree: (Rect | null)[][] = [];
     private words: { [id: string]: boolean; } = {};
 
     @property({type: cc.Prefab})
@@ -18,10 +18,6 @@ export class WordsTree extends cc.Component {
 
         this.clear();
         this.level = level;
-
-
-        // ==========================================================
-        // init tree
 
         for (let x = 0; x < level.w; x++) {
             this.tree[x] = [];
@@ -35,7 +31,7 @@ export class WordsTree extends cc.Component {
         for (let i = 0; i < level.words.length; i++) {
             const word: types.InTreeWord = level.words[i];
 
-            this.words[word.word] = false;
+            this.words[word.word] = true;
 
             for (let j = 0; j < word.word.length; j++) {
                 let x: number, y: number;
@@ -67,15 +63,41 @@ export class WordsTree extends cc.Component {
         this.node.addChild(rectNode);
 
         const rect = rectNode.getComponent(Rect) as Rect;
+
+        this.tree[x][y] = rect;
         rect.setSize(squareSize, squareSize);
+    }
+
+    onWordGuess(word: string): boolean {
+        let isWordGuessed = false;
+
+        word = word.toLowerCase();
+
+        if (word in this.words && this.words[word]) {
+            isWordGuessed = true;
+            this.words[word] = false;
+
+            let inTreeWord = this.level?.words.find((w: types.InTreeWord) => w.word === word) as types.InTreeWord;
+
+            for (let i = 0; i < inTreeWord.word.length; i++) {
+
+                let x = inTreeWord.x + (inTreeWord.align === types.Align.hor ? i : 0),
+                    y = inTreeWord.y + (inTreeWord.align === types.Align.ver ? i : 0);
+
+                let rect = this.tree[x][y] as Rect;
+                rect.text = inTreeWord.word[i] as string;
+            }
+        }
+
+        return isWordGuessed;
     }
 
     clear() {
 
         for (let i = 0; i < this.tree.length; i++) {
             for (let j = 0; j < this.tree[i].length; j++) {
-                if (this.tree[i][j] instanceof cc.Node)
-                    (this.tree[i][j] as unknown as cc.Node).removeFromParent();
+                if (this.tree[i][j] instanceof Rect)
+                    (this.tree[i][j] as unknown as Rect).node.removeFromParent();
             }
         }
 
