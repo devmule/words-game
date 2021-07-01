@@ -255,7 +255,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 200.1,
-      "height": 315
+      "height": 504
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -279,7 +279,7 @@
     "__prefab": {
       "__id__": 12
     },
-    "_lineHeight": 250,
+    "_lineHeight": 400,
     "_string": "A",
     "_horizontalAlign": 1,
     "_fontSize": 300,

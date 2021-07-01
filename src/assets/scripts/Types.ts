@@ -1,3 +1,9 @@
+export enum Event {
+    BUTTON_GESTURED = "BUTTON_GESTURED",
+    WORD_CREATED = "WORD_CREATED"
+}
+
+
 export enum Align {
     /** слева направо */
     hor = 'hor',

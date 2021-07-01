@@ -15,7 +15,7 @@
         "_value": true
       },
       "3d": {
-        "_value": true
+        "_value": false
       },
       "2d": {
         "_value": true
@@ -24,10 +24,10 @@
         "_value": true
       },
       "particle": {
-        "_value": true
+        "_value": false
       },
       "physics": {
-        "_value": true,
+        "_value": false,
         "_option": "physics-ammo"
       },
       "physics-ammo": {
@@ -56,7 +56,7 @@
         "_value": true
       },
       "primitive": {
-        "_value": true
+        "_value": false
       },
       "profiler": {
         "_value": true
@@ -77,7 +77,7 @@
         "_value": true
       },
       "terrain": {
-        "_value": true
+        "_value": false
       },
       "tiled-map": {
         "_value": false
@@ -93,24 +93,23 @@
       "base",
       "gfx-webgl",
       "gfx-webgl2",
-      "3d",
-      "2d",
-      "ui",
-      "particle",
-      "physics-ammo",
-      "intersection-2d",
-      "primitive",
       "profiler",
-      "particle-2d",
       "audio",
       "video",
       "webview",
       "tween",
-      "terrain"
+      "2d",
+      "ui",
+      "intersection-2d",
+      "particle-2d"
     ],
     "noDeprecatedFeatures": {
       "value": false,
       "version": ""
     }
+  },
+  "macroConfig": {
+    "ENABLE_MULTI_TOUCH": false,
+    "CLEANUP_IMAGE_CACHE": true
   }
 }
