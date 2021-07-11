@@ -2,6 +2,7 @@ import * as cc from 'cc';
 import {CharButton} from "./CharButton";
 import {CCInteger} from "cc";
 import * as types from "./Types";
+import {HSLController} from "./HSLController";
 
 const {ccclass, property} = cc._decorator;
 
@@ -22,7 +23,8 @@ export class CharController extends cc.Component {
     @property({type: CCInteger})
     public centerOffset: number = 0;
 
-    initLevel(letters: string) {
+    initLevel(level: types.LevelData) {
+        let letters = level.letters;
 
         const pref = this.textButtonPrefab as unknown as cc.Prefab;
         const uit = (this.node.getComponent(cc.UITransform) as cc.UITransform).contentSize;
@@ -43,6 +45,13 @@ export class CharController extends cc.Component {
 
             this.charButtons.push(charBtn);
             this.node.addChild(btnNode);
+
+            let charHSL = btnNode.getChildByName('Circle')?.getComponent(HSLController) as HSLController;
+            if (charHSL) {
+                charHSL.H = level?.vis?.hsl && level?.vis?.hsl[0] || 0;
+                charHSL.S = level?.vis?.hsl && level?.vis?.hsl[1] || 0;
+                charHSL.L = level?.vis?.hsl && level?.vis?.hsl[2] || 0;
+            }
         }
     }
 

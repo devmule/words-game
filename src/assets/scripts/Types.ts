@@ -12,6 +12,10 @@ export enum Align {
     ver = 'ver'
 }
 
+export type LevelVisual = {
+    hsl?: number[]
+}
+
 export type InTreeWord = {
     align: keyof typeof Align
     x: number
@@ -24,5 +28,8 @@ export type LevelData = {
     words: InTreeWord[]
     w: number
     h: number
+
+    // необязательные, в случае если не задано - генерируется случайно или ставится по дефолту
+    vis?: LevelVisual
 }
 

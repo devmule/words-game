@@ -1,6 +1,7 @@
 import * as cc from 'cc';
 import * as types from "./Types";
 import {Rect} from "./Rect";
+import {HSLController} from "./HSLController";
 
 const {ccclass, property} = cc._decorator;
 
@@ -63,9 +64,15 @@ export class WordsTree extends cc.Component {
         this.node.addChild(rectNode);
 
         const rect = rectNode.getComponent(Rect) as Rect;
-
         this.tree[x][y] = rect;
         rect.setSize(squareSize, squareSize);
+
+        const rectHSL = rectNode.getChildByName('Back')?.getComponent(HSLController) as HSLController;
+        if (rectHSL) {
+            rectHSL.H = this.level?.vis?.hsl && this.level?.vis?.hsl[0] || 0;
+            rectHSL.S = this.level?.vis?.hsl && this.level?.vis?.hsl[1] || 0;
+            rectHSL.L = this.level?.vis?.hsl && this.level?.vis?.hsl[2] || 0;
+        }
     }
 
     onWordGuess(word: string): boolean {

@@ -11,7 +11,7 @@ export class HSLController extends cc.Component {
         return (this.node.getComponent(cc.Sprite) as cc.Sprite).material as cc.Material;
     }
 
-    @property({type: cc.CCInteger, slide: true, range: [0, 360, 1]})
+    @property({type: cc.CCInteger, slide: true, range: [-180, 180, 1]})
     public H: number = 360 / 2;
 
     @property({type: cc.CCInteger, slide: true, range: [-100, 100, 1]})
@@ -25,7 +25,7 @@ export class HSLController extends cc.Component {
     }
 
     public updateShaderValues() {
-        this.material?.setProperty("HUE_shift", this.H / 360, 0);
+        this.material?.setProperty("HUE_shift", (this.H) / 360, 0);
         this.material?.setProperty("SATURATION_factor", (this.S + 100) / 100, 0);
         this.material?.setProperty("LIGHTNESS_factor", (this.L + 100) / 100, 0);
     }

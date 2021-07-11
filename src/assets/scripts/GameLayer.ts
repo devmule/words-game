@@ -2,14 +2,17 @@ import * as cc from 'cc';
 import * as types from "./Types";
 import {WordsTree} from "./WordsTree";
 import {CharController} from "./CharController";
+import {HSLController} from "./HSLController";
 
-const {ccclass, property} = cc._decorator;
+const {ccclass, property, executeInEditMode} = cc._decorator;
 
 @ccclass('GameLayer')
+@executeInEditMode
 export class GameLayer extends cc.Component {
 
-    private charController: CharController | null | undefined;
-    private wordsTree: WordsTree | null | undefined;
+    private charController: CharController | undefined;
+    private wordsTree: WordsTree | undefined;
+    private background: cc.Node | undefined;
 
     start() {
 
@@ -35,7 +38,8 @@ export class GameLayer extends cc.Component {
                 {"align": "ver", "x": 9, "y": 2, "word": "аскет"}
             ],
             "w": 11,
-            "h": 7
+            "h": 7,
+            vis: {hsl: [180, 0, 0]}
         });
     }
 
@@ -44,8 +48,24 @@ export class GameLayer extends cc.Component {
     }
 
     initLevel(level: types.LevelData) {
+
+        // задать дефолтные значения
+        if (!level.vis) level.vis = {};
+        if (!level.vis.hsl) level.vis.hsl = [];
+        if (level.vis.hsl[0] === undefined) level.vis.hsl[0] = 0;
+        if (level.vis.hsl[0] === undefined) level.vis.hsl[1] = 0;
+        if (level.vis.hsl[0] === undefined) level.vis.hsl[2] = 0;
+
         this.wordsTree?.initLevel(level);
-        this.charController?.initLevel(level.letters);
+        this.charController?.initLevel(level);
+
+        let background = this.node.getChildByName('Background') as cc.Node;
+        let backHSL = background?.getComponent(HSLController) as HSLController;
+        if (backHSL) {
+            backHSL.H = level?.vis?.hsl && level?.vis?.hsl[0] || 0;
+            backHSL.S = level?.vis?.hsl && level?.vis?.hsl[1] || 0;
+            backHSL.L = level?.vis?.hsl && level?.vis?.hsl[2] || 0;
+        }
     }
 
 
