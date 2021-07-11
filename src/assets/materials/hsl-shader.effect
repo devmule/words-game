@@ -14,9 +14,9 @@ CCEffect %{
         cullMode: none
       properties:
 
-        HUE_shift:          { value: 0 , editor: { range: [0, 1, 0.01], slide: true }  }
-        SATURATION_factor:  { value: 1 , editor: { range: [0, 2, 0.01], slide: true }  }
-        LIGHTNESS_factor:   { value: 1 , editor: { range: [0, 2, 0.01], slide: true }  }
+        HUE_shift:          { value: 0 , editor: { visible: false }  }
+        SATURATION_factor:  { value: 1 , editor: { visible: false }  }
+        LIGHTNESS_factor:   { value: 1 , editor: { visible: false }  }
 
         alphaThreshold:     { value: 0.5 }
 }%

@@ -28,8 +28,9 @@
   ],
   "_props": [
     {
-      "HUE_shift": 0.78,
-      "LIGHTNESS_factor": 0.87
+      "HUE_shift": 0.5,
+      "SATURATION_factor": 1.03,
+      "LIGHTNESS_factor": 0.5
     }
   ]
 }
