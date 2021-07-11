@@ -118,11 +118,11 @@ export class CharController extends cc.Component {
                     let p2 = points[i + 1];
                     let p3 = (i != points.length - 2) ? points[i + 2] : p2;
 
-                    let cp1x = p1.x + (p2.x - p0.x) / 3;
-                    let cp1y = p1.y + (p2.y - p0.y) / 3;
+                    let cp1x = p1.x + (p2.x - p0.x) / 6;
+                    let cp1y = p1.y + (p2.y - p0.y) / 6;
 
-                    let cp2x = p2.x - (p3.x - p1.x) / 3;
-                    let cp2y = p2.y - (p3.y - p1.y) / 3;
+                    let cp2x = p2.x - (p3.x - p1.x) / 6;
+                    let cp2y = p2.y - (p3.y - p1.y) / 6;
 
                     this.graphics.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
                 }

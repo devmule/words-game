@@ -575,7 +575,7 @@
       "b": 255,
       "a": 255
     },
-    "_lineWidth": 50,
+    "_lineWidth": 20,
     "_strokeColor": {
       "__type__": "cc.Color",
       "r": 243,
