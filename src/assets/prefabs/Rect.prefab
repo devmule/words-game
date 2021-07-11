@@ -150,14 +150,17 @@
       "__id__": 6
     },
     "_visFlags": 0,
-    "_customMaterial": null,
+    "_customMaterial": {
+      "__uuid__": "be1aa32c-8f25-409f-bbda-99b719922441",
+      "__expectedType__": "cc.Material"
+    },
     "_srcBlendFactor": 2,
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 216,
-      "g": 189,
-      "b": 189,
+      "r": 196,
+      "g": 210,
+      "b": 247,
       "a": 255
     },
     "_spriteFrame": {

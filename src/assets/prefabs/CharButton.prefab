@@ -150,14 +150,17 @@
       "__id__": 6
     },
     "_visFlags": 0,
-    "_customMaterial": null,
+    "_customMaterial": {
+      "__uuid__": "be1aa32c-8f25-409f-bbda-99b719922441",
+      "__expectedType__": "cc.Material"
+    },
     "_srcBlendFactor": 2,
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 223,
-      "g": 150,
-      "b": 214,
+      "r": 196,
+      "g": 220,
+      "b": 241,
       "a": 255
     },
     "_spriteFrame": {
@@ -345,16 +348,16 @@
     "__prefab": null,
     "defaultColor": {
       "__type__": "cc.Color",
-      "r": 233,
-      "g": 151,
-      "b": 220,
+      "r": 196,
+      "g": 220,
+      "b": 241,
       "a": 255
     },
     "activeColor": {
       "__type__": "cc.Color",
-      "r": 243,
-      "g": 10,
-      "b": 140,
+      "r": 126,
+      "g": 187,
+      "b": 241,
       "a": 255
     },
     "_id": ""

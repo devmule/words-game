@@ -15,8 +15,8 @@ CCEffect %{
       properties:
 
         HUE_shift:          { value: 0 , editor: { range: [0, 1, 0.01], slide: true }  }
-        SATURATION_factor:  { value: 1 , editor: { range: [0, 1, 0.01], slide: true }  }
-        LIGHTNESS_factor:   { value: 1 , editor: { range: [0, 1, 0.01], slide: true }  }
+        SATURATION_factor:  { value: 1 , editor: { range: [0, 2, 0.01], slide: true }  }
+        LIGHTNESS_factor:   { value: 1 , editor: { range: [0, 2, 0.01], slide: true }  }
 
         alphaThreshold:     { value: 0.5 }
 }%
@@ -78,7 +78,7 @@ CCProgram fs %{
     layout(set = 2, binding = 10) uniform sampler2D cc_spriteTexture;
   #endif
 
-  uniform WipeShader {
+  uniform HSLShader {
     lowp float HUE_shift;
     lowp float SATURATION_factor;
     lowp float LIGHTNESS_factor;

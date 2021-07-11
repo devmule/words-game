@@ -16,7 +16,9 @@
   "_states": [
     {
       "rasterizerState": {},
-      "depthStencilState": {},
+      "depthStencilState": {
+        "depthTest": false
+      },
       "blendState": {
         "targets": [
           {}
@@ -26,7 +28,8 @@
   ],
   "_props": [
     {
-      "HUE_shift": 1
+      "HUE_shift": 0.78,
+      "LIGHTNESS_factor": 0.87
     }
   ]
 }

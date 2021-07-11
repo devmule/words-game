@@ -203,9 +203,9 @@
     },
     "_lscale": {
       "__type__": "cc.Vec3",
-      "x": 1.573,
-      "y": 1.573,
-      "z": 0.393
+      "x": 0.729,
+      "y": 0.729,
+      "z": 0.18
     },
     "_layer": 1073741824,
     "_euler": {
@@ -227,8 +227,8 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 640,
-      "height": 868
+      "width": 1215,
+      "height": 2160
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -261,7 +261,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "d00226ee-dff5-47c0-905a-4e4de1965989@f9941",
+      "__uuid__": "f1412bc9-5c7d-4a0b-9e69-0b603757c002@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
@@ -581,18 +581,18 @@
     "_lineWidth": 20,
     "_strokeColor": {
       "__type__": "cc.Color",
-      "r": 243,
-      "g": 10,
-      "b": 140,
+      "r": 71,
+      "g": 71,
+      "b": 71,
       "a": 255
     },
     "_lineJoin": 1,
     "_lineCap": 1,
     "_fillColor": {
       "__type__": "cc.Color",
-      "r": 243,
-      "g": 10,
-      "b": 140,
+      "r": 71,
+      "g": 71,
+      "b": 71,
       "a": 255
     },
     "_miterLimit": 10,
