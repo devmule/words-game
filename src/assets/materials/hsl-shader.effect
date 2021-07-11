@@ -1,0 +1,141 @@
+// Copyright (c) 2017-2020 Xiamen Yaji Software Co., Ltd.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vs:vert
+      frag: fs:frag
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+
+        HUE_shift:          { value: 0 , editor: { range: [0, 1, 0.01], slide: true }  }
+        SATURATION_factor:  { value: 1 , editor: { range: [0, 1, 0.01], slide: true }  }
+        LIGHTNESS_factor:   { value: 1 , editor: { range: [0, 1, 0.01], slide: true }  }
+
+        alphaThreshold:     { value: 0.5 }
+}%
+
+CCProgram vs %{
+  precision highp float;
+  #include <cc-global>
+  #if USE_LOCAL
+    #include <cc-local>
+  #endif
+  #if SAMPLE_FROM_RT
+    #include <common>
+  #endif
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 color;
+  out vec2 uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+
+    #if USE_LOCAL
+      pos = cc_matWorld * pos;
+    #endif
+
+    #if USE_PIXEL_ALIGNMENT
+      pos = cc_matView * pos;
+      pos.xyz = floor(pos.xyz);
+      pos = cc_matProj * pos;
+    #else
+      pos = cc_matViewProj * pos;
+    #endif
+
+    uv0 = a_texCoord;
+    #if SAMPLE_FROM_RT
+      CC_HANDLE_RT_SAMPLE_FLIP(uv0);
+    #endif
+    color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  #include <embedded-alpha>
+  #include <alpha-test>
+
+  in vec4 color;
+  vec3 rgb2hsl(in vec3 c);
+  vec3 hsl2rgb(in vec3 c);
+
+
+  #if USE_TEXTURE
+    in vec2 uv0;
+    #pragma builtin(local)
+    layout(set = 2, binding = 10) uniform sampler2D cc_spriteTexture;
+  #endif
+
+  uniform WipeShader {
+    lowp float HUE_shift;
+    lowp float SATURATION_factor;
+    lowp float LIGHTNESS_factor;
+  };
+
+  vec4 frag () {
+
+    vec4 o = vec4(1, 1, 1, 1);
+
+    #if USE_TEXTURE
+      o *= CCSampleWithAlphaSeparated(cc_spriteTexture, uv0);
+      #if IS_GRAY
+        float gray  = 0.2126 * o.r + 0.7152 * o.g + 0.0722 * o.b;
+        o.r = o.g = o.b = gray;
+      #endif
+    #endif
+
+    o *= color;
+
+    // shift color
+    vec3 hsl = rgb2hsl(o.xyz);
+    hsl.x += HUE_shift;
+    hsl.y *= SATURATION_factor;
+    hsl.z *= LIGHTNESS_factor;
+    hsl = hsl2rgb(hsl);
+
+    o.xyz = hsl;
+    return o;
+  }
+
+  vec3 hsl2rgb( in vec3 c ) {
+      vec3 rgb = clamp( abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),6.0)-3.0)-1.0, 0.0, 1.0 );
+      return c.z + c.y * (rgb-0.5)*(1.0-abs(2.0*c.z-1.0));
+  }
+
+  vec3 rgb2hsl( in vec3 c ) {
+    float h = 0.0;
+  	float s = 0.0;
+  	float l = 0.0;
+  	float r = c.r;
+  	float g = c.g;
+  	float b = c.b;
+  	float cMin = min( r, min( g, b ) );
+  	float cMax = max( r, max( g, b ) );
+
+  	l = ( cMax + cMin ) / 2.0;
+  	if ( cMax > cMin ) {
+  		float cDelta = cMax - cMin;
+  		s = l < .0 ? cDelta / ( cMax + cMin ) : cDelta / ( 2.0 - ( cMax + cMin ) );
+
+  		if ( r == cMax ) h = ( g - b ) / cDelta;
+  		else if ( g == cMax ) h = 2.0 + ( b - r ) / cDelta;
+  		else h = 4.0 + ( r - g ) / cDelta;
+
+  		if ( h < 0.0) h += 6.0;
+  		h = h / 6.0;
+  	}
+  	return vec3( h, s, l );
+  }
+}%
