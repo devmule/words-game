@@ -19,7 +19,6 @@ export class CharController extends cc.Component {
     @property({type: cc.Prefab})
     public textButtonPrefab: cc.Prefab | undefined;
 
-
     @property({type: CCInteger})
     public centerOffset: number = 0;
 
@@ -87,7 +86,6 @@ export class CharController extends cc.Component {
 
         cursor = (e.touch as unknown as cc.EventTouch).getUILocation(cursor);
 
-        // fixme? жадно вышло
         for (let i = 0; i < this.charButtons.length; i++) {
             let btn = this.charButtons[i];
             if (!btn.activated) {
@@ -101,23 +99,35 @@ export class CharController extends cc.Component {
             }
         }
 
-        local.set(-cursor.x, -cursor.y);
-        local = local.transformMat4(this.node.worldMatrix);
-        local.set(-local.x, -local.y);
+        if (this.graphics) {
 
-        if (this.selectedButtons.length > 0 && this.graphics) {
+            local.set(-cursor.x, -cursor.y);
+            local = local.transformMat4(this.node.worldMatrix);
+            local.set(-local.x, -local.y);
+
+            const points = [...this.selectedButtons.map(btn => btn.node.position), local];
 
             this.graphics.clear();
 
-            for (let i = 0; i < this.selectedButtons.length; i++) {
-                let btn = this.selectedButtons[i];
-                let coords = btn.node.position;
+            if (points.length > 0) {
+                this.graphics.moveTo(points[0].x, points[0].y);
 
-                if (i === 0) this.graphics.moveTo(coords.x, coords.y);
-                else this.graphics.lineTo(coords.x, coords.y);
+                for (let i = 0; i < points.length - 1; i++) {
+                    let p0 = (i > 0) ? points[i - 1] : points[0];
+                    let p1 = points[i];
+                    let p2 = points[i + 1];
+                    let p3 = (i != points.length - 2) ? points[i + 2] : p2;
+
+                    let cp1x = p1.x + (p2.x - p0.x) / 3;
+                    let cp1y = p1.y + (p2.y - p0.y) / 3;
+
+                    let cp2x = p2.x - (p3.x - p1.x) / 3;
+                    let cp2y = p2.y - (p3.y - p1.y) / 3;
+
+                    this.graphics.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+                }
             }
 
-            this.graphics.lineTo(local.x, local.y);
             this.graphics.stroke();
         }
     }

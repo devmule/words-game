@@ -93,15 +93,15 @@
       "base",
       "gfx-webgl",
       "gfx-webgl2",
-      "profiler",
-      "audio",
-      "video",
-      "webview",
-      "tween",
       "2d",
       "ui",
       "intersection-2d",
-      "particle-2d"
+      "profiler",
+      "particle-2d",
+      "audio",
+      "video",
+      "webview",
+      "tween"
     ],
     "noDeprecatedFeatures": {
       "value": false,
