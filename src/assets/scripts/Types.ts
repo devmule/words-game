@@ -29,6 +29,8 @@ export type LevelData = {
     w: number
     h: number
 
+    extraWords: string[];
+
     // необязательные, в случае если не задано - генерируется случайно или ставится по дефолту
     vis?: LevelVisual
 }

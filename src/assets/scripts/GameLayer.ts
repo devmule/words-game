@@ -49,7 +49,6 @@ export class GameLayer extends cc.Component {
 
     private charController: CharController | undefined;
     private wordsTree: WordsTree | undefined;
-    private background: cc.Node | undefined;
     private level: types.LevelData | undefined;
 
     start() {
@@ -63,8 +62,8 @@ export class GameLayer extends cc.Component {
 
         // fixme temporary
         this.initLevel({
-            "letters": "сретка",
-            "words": [
+            letters: "сретка",
+            words: [
                 {"align": "hor", "x": 4, "y": 0, "word": "треска"},
                 {"align": "ver", "x": 4, "y": 0, "word": "треск"},
                 {"align": "ver", "x": 1, "y": 1, "word": "катер"},
@@ -75,8 +74,10 @@ export class GameLayer extends cc.Component {
                 {"align": "hor", "x": 3, "y": 6, "word": "крест"},
                 {"align": "ver", "x": 9, "y": 2, "word": "аскет"}
             ],
-            "w": 11,
-            "h": 7,
+            w: 11,
+            h: 7,
+            extraWords: [],
+
             vis: {hsl: [-100, 0, 0]}
         });
     }
