@@ -10,9 +10,47 @@ const {ccclass, property, executeInEditMode} = cc._decorator;
 @executeInEditMode
 export class GameLayer extends cc.Component {
 
+    //<editor-fold desc="/// editor only">
+    private __h: number = 0;
+    private __s: number = 0;
+    private __l: number = 0;
+
+    @property({type: cc.CCInteger, slide: true, range: [-180, 180, 1]})
+    private get H(): number {
+        return this.__h;
+    }
+
+    private set H(val: number) {
+        this.__h = val;
+        this.setHSL(this.H, this.S, this.L);
+    }
+
+    @property({type: cc.CCInteger, slide: true, range: [-100, 100, 1]})
+    private get S(): number {
+        return this.__s;
+    }
+
+    private set S(val: number) {
+        this.__s = val;
+        this.setHSL(this.H, this.S, this.L);
+    }
+
+    @property({type: cc.CCInteger, slide: true, range: [-100, 100, 1]})
+    private get L(): number {
+        return this.__l;
+    }
+
+    private set L(val: number) {
+        this.__l = val;
+        this.setHSL(this.H, this.S, this.L);
+    }
+
+    //</editor-fold>
+
     private charController: CharController | undefined;
     private wordsTree: WordsTree | undefined;
     private background: cc.Node | undefined;
+    private level: types.LevelData | undefined;
 
     start() {
 
@@ -39,34 +77,34 @@ export class GameLayer extends cc.Component {
             ],
             "w": 11,
             "h": 7,
-            vis: {hsl: [180, 0, 0]}
+            vis: {hsl: [-100, 0, 0]}
         });
     }
 
-    onWordCreated(word: string) {
+    onWordCreated(word: string): void {
         this.wordsTree?.onWordGuess(word);
     }
 
-    initLevel(level: types.LevelData) {
-
-        // задать дефолтные значения
-        if (!level.vis) level.vis = {};
-        if (!level.vis.hsl) level.vis.hsl = [];
-        if (level.vis.hsl[0] === undefined) level.vis.hsl[0] = 0;
-        if (level.vis.hsl[0] === undefined) level.vis.hsl[1] = 0;
-        if (level.vis.hsl[0] === undefined) level.vis.hsl[2] = 0;
-
+    initLevel(level: types.LevelData): void {
+        this.level = level;
         this.wordsTree?.initLevel(level);
         this.charController?.initLevel(level);
 
-        let background = this.node.getChildByName('Background') as cc.Node;
-        let backHSL = background?.getComponent(HSLController) as HSLController;
-        if (backHSL) {
-            backHSL.H = level?.vis?.hsl && level?.vis?.hsl[0] || 0;
-            backHSL.S = level?.vis?.hsl && level?.vis?.hsl[1] || 0;
-            backHSL.L = level?.vis?.hsl && level?.vis?.hsl[2] || 0;
-        }
+        // применить необязательные переменные
+        // задать дефолтные значения
+        this.setHSL(...(level?.vis?.hsl || []));
     }
 
+    setHSL(h?: number, s?: number, l?: number): void {
+        if (!h) h = Math.random() * 360;
+        if (!s) s = 0;
+        if (!l) l = 0;
+
+        let background = this.node.getChildByName('Background') as cc.Node;
+        let backHSL = background?.getComponent(HSLController) as HSLController;
+        backHSL?.setHSL(h, s, l);
+        this.charController?.setHSL(h, s, l);
+        this.wordsTree?.setHSL(h, s, l);
+    }
 
 }

@@ -66,13 +66,6 @@ export class WordsTree extends cc.Component {
         const rect = rectNode.getComponent(Rect) as Rect;
         this.tree[x][y] = rect;
         rect.setSize(squareSize, squareSize);
-
-        const rectHSL = rectNode.getChildByName('Back')?.getComponent(HSLController) as HSLController;
-        if (rectHSL) {
-            rectHSL.H = this.level?.vis?.hsl && this.level?.vis?.hsl[0] || 0;
-            rectHSL.S = this.level?.vis?.hsl && this.level?.vis?.hsl[1] || 0;
-            rectHSL.L = this.level?.vis?.hsl && this.level?.vis?.hsl[2] || 0;
-        }
     }
 
     onWordGuess(word: string): boolean {
@@ -111,5 +104,17 @@ export class WordsTree extends cc.Component {
         this.level = undefined;
         this.words = {};
         this.tree = [];
+    }
+
+    setHSL(h: number, s: number, l: number) {
+        for (let i = 0; i < this.tree.length; i++) {
+            for (let j = 0; j < this.tree[i].length; j++) {
+                if (this.tree[i][j] instanceof Rect) {
+                    let rectNode = (this.tree[i][j] as unknown as Rect).node;
+                    const rectHSL = rectNode.getChildByName('Back')?.getComponent(HSLController) as HSLController;
+                    rectHSL.setHSL(h, s, l);
+                }
+            }
+        }
     }
 }

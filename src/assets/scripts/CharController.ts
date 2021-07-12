@@ -1,6 +1,5 @@
 import * as cc from 'cc';
 import {CharButton} from "./CharButton";
-import {CCInteger} from "cc";
 import * as types from "./Types";
 import {HSLController} from "./HSLController";
 
@@ -20,7 +19,7 @@ export class CharController extends cc.Component {
     @property({type: cc.Prefab})
     public textButtonPrefab: cc.Prefab | undefined;
 
-    @property({type: CCInteger})
+    @property({type: cc.CCInteger})
     public centerOffset: number = 0;
 
     initLevel(level: types.LevelData) {
@@ -45,13 +44,6 @@ export class CharController extends cc.Component {
 
             this.charButtons.push(charBtn);
             this.node.addChild(btnNode);
-
-            let charHSL = btnNode.getChildByName('Circle')?.getComponent(HSLController) as HSLController;
-            if (charHSL) {
-                charHSL.H = level?.vis?.hsl && level?.vis?.hsl[0] || 0;
-                charHSL.S = level?.vis?.hsl && level?.vis?.hsl[1] || 0;
-                charHSL.L = level?.vis?.hsl && level?.vis?.hsl[2] || 0;
-            }
         }
     }
 
@@ -138,6 +130,14 @@ export class CharController extends cc.Component {
             }
 
             this.graphics.stroke();
+        }
+    }
+
+    setHSL(h: number, s: number, l: number) {
+        for (let i = 0; i < this.charButtons.length; i++) {
+            let btnNode = this.charButtons[i].node as cc.Node;
+            let charHSL = btnNode.getChildByName('Circle')?.getComponent(HSLController) as HSLController;
+            charHSL.setHSL(h, s, l);
         }
     }
 
