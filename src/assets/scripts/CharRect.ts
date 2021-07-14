@@ -2,8 +2,8 @@ import * as cc from 'cc';
 
 const {ccclass, property} = cc._decorator;
 
-@ccclass('Rect')
-export class Rect extends cc.Component {
+@ccclass('CharRect')
+export class CharRect extends cc.Component {
 
     private textNode: cc.Node | null | undefined;
     private backNode: cc.Node | null | undefined;

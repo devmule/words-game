@@ -1,15 +1,16 @@
 import * as cc from 'cc';
 import * as types from "./Types";
-import {Rect} from "./Rect";
+import {CharRect} from "./CharRect";
 import {HSLController} from "./HSLController";
 
-const {ccclass, property} = cc._decorator;
+const {ccclass, property, executeInEditMode} = cc._decorator;
 
 @ccclass('WordsTree')
+@executeInEditMode
 export class WordsTree extends cc.Component {
 
     private level: types.LevelData | undefined;
-    private tree: (Rect | null)[][] = [];
+    private tree: (CharRect | null)[][] = [];
     private words: { [id: string]: boolean; } = {};
 
     @property({type: cc.Prefab})
@@ -56,6 +57,8 @@ export class WordsTree extends cc.Component {
     }
 
     createRect(x: number, y: number, squareSize: number) {
+        if (this.tree[x][y]) return;
+
         const rectNode = cc.instantiate(this.rectPrefab) as unknown as cc.Node;
         rectNode.setPosition(
             (x - (this.level as types.LevelData).w / 2 + .5) * squareSize,
@@ -63,9 +66,15 @@ export class WordsTree extends cc.Component {
         );
         this.node.addChild(rectNode);
 
-        const rect = rectNode.getComponent(Rect) as Rect;
+        const rect = rectNode.getComponent(CharRect) as CharRect;
         this.tree[x][y] = rect;
         rect.setSize(squareSize, squareSize);
+
+
+        let scale = cc.tween().to(1, {scale: cc.v3(2, 2, 2)})
+        let angle = cc.tween().to(1, {angle: cc.v3(100, 100, 100)})
+        let position = cc.tween().to(1, {position: cc.v3(100, 100, 100)})
+        cc.tween(rectNode).then(position).then(angle).then(scale).start();
     }
 
     onWordGuess(word: string): boolean {
@@ -84,7 +93,7 @@ export class WordsTree extends cc.Component {
                 let x = inTreeWord.x + (inTreeWord.align === types.Align.hor ? i : 0),
                     y = inTreeWord.y + (inTreeWord.align === types.Align.ver ? i : 0);
 
-                let rect = this.tree[x][y] as Rect;
+                let rect = this.tree[x][y] as CharRect;
                 rect.text = inTreeWord.word[i] as string;
             }
         }
@@ -93,13 +102,7 @@ export class WordsTree extends cc.Component {
     }
 
     clear() {
-
-        for (let i = 0; i < this.tree.length; i++) {
-            for (let j = 0; j < this.tree[i].length; j++) {
-                if (this.tree[i][j] instanceof Rect)
-                    (this.tree[i][j] as unknown as Rect).node.removeFromParent();
-            }
-        }
+        while (this.node.children.length) this.node.children[0].removeFromParent();
 
         this.level = undefined;
         this.words = {};
@@ -109,8 +112,8 @@ export class WordsTree extends cc.Component {
     setHSL(h: number, s: number, l: number) {
         for (let i = 0; i < this.tree.length; i++) {
             for (let j = 0; j < this.tree[i].length; j++) {
-                if (this.tree[i][j] instanceof Rect) {
-                    let rectNode = (this.tree[i][j] as unknown as Rect).node;
+                if (this.tree[i][j] instanceof CharRect) {
+                    let rectNode = (this.tree[i][j] as unknown as CharRect).node;
                     const rectHSL = rectNode.getChildByName('Back')?.getComponent(HSLController) as HSLController;
                     rectHSL.setHSL(h, s, l);
                 }

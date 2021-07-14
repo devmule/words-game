@@ -5,12 +5,11 @@ import {HSLController} from "./HSLController";
 
 const {ccclass, property} = cc._decorator;
 
+const v1: cc.Vec2 = new cc.Vec2();
+const v2: cc.Vec2 = new cc.Vec2();
+
 @ccclass('CharController')
 export class CharController extends cc.Component {
-
-
-    static v1: cc.Vec2 = new cc.Vec2();
-    static v2: cc.Vec2 = new cc.Vec2();
 
     private charButtons: CharButton[] = [];
     private selectedButtons: CharButton[] = [];
@@ -23,6 +22,7 @@ export class CharController extends cc.Component {
     public centerOffset: number = 0;
 
     initLevel(level: types.LevelData) {
+        this.clear();
         let letters = level.letters;
 
         const pref = this.textButtonPrefab as unknown as cc.Prefab;
@@ -82,8 +82,8 @@ export class CharController extends cc.Component {
 
     touchMove(e: cc.EventTouch) {
 
-        let cursor = CharController.v1;
-        let local = CharController.v2;
+        let cursor = v1;
+        let local = v2;
 
         cursor = (e.touch as unknown as cc.EventTouch).getUILocation(cursor);
 
@@ -139,6 +139,21 @@ export class CharController extends cc.Component {
             let charHSL = btnNode.getChildByName('Circle')?.getComponent(HSLController) as HSLController;
             charHSL.setHSL(h, s, l);
         }
+    }
+
+    clear() {
+        let lineDrawer: cc.Node | undefined;
+        let backGround: cc.Node | undefined;
+
+        while (this.node.children.length > 0) {
+            let child = this.node.children[0];
+            if (child.name === 'Background') backGround = child;
+            if (child.name === 'LineDraw') lineDrawer = child;
+            child.removeFromParent();
+        }
+
+        if (backGround) this.node.addChild(backGround);
+        if (lineDrawer) this.node.addChild(lineDrawer);
     }
 
 }

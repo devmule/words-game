@@ -12,7 +12,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Rect",
+    "_name": "CharRect",
     "_objFlags": 512,
     "_parent": null,
     "_children": [
@@ -200,9 +200,6 @@
     "__prefab": {
       "__id__": 8
     },
-    "H": 0,
-    "S": 0,
-    "L": 0,
     "_id": ""
   },
   {

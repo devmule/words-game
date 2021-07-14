@@ -10,10 +10,24 @@ const {ccclass, property, executeInEditMode} = cc._decorator;
 @executeInEditMode
 export class GameLayer extends cc.Component {
 
+
     //<editor-fold desc="/// editor only">
     private __h: number = 0;
     private __s: number = 0;
     private __l: number = 0;
+    private __updatePrefab: boolean = false;
+
+    @property({type: cc.CCBoolean})
+    public set updatePrefab(val: boolean) {
+        if (val === this.__updatePrefab) return;
+        this.__updatePrefab = val;
+        if (val) this.initLevel(types.tempLevel);
+        else this.clear();
+    }
+
+    public get updatePrefab(): boolean {
+        return this.__updatePrefab;
+    }
 
     @property({type: cc.CCInteger, slide: true, range: [-180, 180, 1]})
     private get H(): number {
@@ -59,27 +73,6 @@ export class GameLayer extends cc.Component {
         let charControllerNode = this.node.getChildByName('CharController') as cc.Node;
         this.charController = charControllerNode.getComponent(CharController) as CharController;
         this.charController.node.on(types.Event.WORD_CREATED, this.onWordCreated, this);
-
-        // fixme temporary
-        this.initLevel({
-            letters: "сретка",
-            words: [
-                {"align": "hor", "x": 4, "y": 0, "word": "треска"},
-                {"align": "ver", "x": 4, "y": 0, "word": "треск"},
-                {"align": "ver", "x": 1, "y": 1, "word": "катер"},
-                {"align": "hor", "x": 3, "y": 2, "word": "секта"},
-                {"align": "hor", "x": 0, "y": 4, "word": "тесак"},
-                {"align": "hor", "x": 6, "y": 4, "word": "сетка"},
-                {"align": "ver", "x": 7, "y": 2, "word": "арест"},
-                {"align": "hor", "x": 3, "y": 6, "word": "крест"},
-                {"align": "ver", "x": 9, "y": 2, "word": "аскет"}
-            ],
-            w: 11,
-            h: 7,
-            extraWords: [],
-
-            vis: {hsl: [-100, 0, 0]}
-        });
     }
 
     onWordCreated(word: string): void {
@@ -94,6 +87,12 @@ export class GameLayer extends cc.Component {
         // применить необязательные переменные
         // задать дефолтные значения
         this.setHSL(...(level?.vis?.hsl || []));
+    }
+
+    clear() {
+        this.level = undefined;
+        this.wordsTree?.clear();
+        this.charController?.clear();
     }
 
     setHSL(h?: number, s?: number, l?: number): void {
