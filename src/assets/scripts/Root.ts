@@ -37,20 +37,20 @@ export class Root extends cc.Component {
 
     start() {
         this.screenController = this.node.getComponent(ScreenController) as ScreenController;
+        this.openLevel(types.tempLevel);
     }
 
     openMenu() {
-        this.screenController?.closeAll(true);
+        this.screenController?.closeAll();
         let menuNode = cc.instantiate(this.layerMenuPrefab) as unknown as cc.Node;
         this.screenController?.addScreen(menuNode);
     }
 
     openLevel(levelData: types.LevelData) {
-        this.screenController?.closeAll(true);
+        this.screenController?.closeAll();
         let levelNode = cc.instantiate(this.layerLevelPrefab) as unknown as cc.Node;
         let level = levelNode.getComponent(GameLayer) as GameLayer;
-        level.initLevel(levelData);
         this.screenController?.addScreen(levelNode);
-
+        level.initLevel(levelData);
     }
 }

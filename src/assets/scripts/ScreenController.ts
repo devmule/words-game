@@ -1,5 +1,6 @@
 import * as cc from "cc";
 import * as types from "./Types";
+import * as env from "cc/env";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;
 
@@ -34,32 +35,41 @@ export class ScreenController extends cc.Component {
 
         const opacity = screenNode.getComponent(cc.UIOpacity) as cc.UIOpacity;
 
-        if (immediately) {
+        if (immediately || env.EDITOR) {
             screenNode.removeFromParent();
 
         } else {
+            const easing = 'cubicInOut';
+            const d = 1;
+
             cc.tween(screenNode)
-                .to(1, {position: cc.v3(0, 1000, 0), scale: cc.v3(2, 2, 2)})
+                .to(d, {position: cc.v3(0, -1000, 0), scale: cc.v3(1, 1, 1)}, {easing})
                 .call(() => screenNode.removeFromParent())
                 .start();
             cc.tween(opacity)
-                .to(1, {opacity: 0})
+                .to(d, {opacity: 0}, {easing})
                 .start();
         }
     }
 
     openScreen(screenNode: cc.Node, immediately: boolean) {
 
+        const easing = 'cubicInOut';
+        const s = 0;
+        const d = 1;
         const opacity = screenNode.getComponent(cc.UIOpacity) as cc.UIOpacity;
 
         this.node.addChild(screenNode);
 
-        if (!immediately) {
+        if (!immediately && !env.EDITOR) {
             cc.tween(screenNode)
-                .to(1, {position: cc.v3(0, 0, 0), scale: cc.v3(1, 1, 1)})
+                .to(s, {position: cc.v3(0, 1000, 0), scale: cc.v3(1, 1, 1)})
+                .to(d, {position: cc.v3(0, 0, 0), scale: cc.v3(1, 1, 1)}, {easing})
+                .call(() => null)
                 .start();
             cc.tween(opacity)
-                .to(1, {opacity: 255})
+                .to(s, {opacity: 0})
+                .to(d, {opacity: 255}, {easing})
                 .start();
         }
 

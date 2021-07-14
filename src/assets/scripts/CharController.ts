@@ -13,7 +13,14 @@ export class CharController extends cc.Component {
 
     private charButtons: CharButton[] = [];
     private selectedButtons: CharButton[] = [];
-    private graphics: cc.Graphics | undefined;
+    private _graphics: cc.Graphics | undefined;
+
+    private get graphics(): cc.Graphics {
+        if (this._graphics) return this._graphics;
+        let lineDrawNode = this.node.getChildByName("LineDraw") as cc.Node;
+        this._graphics = lineDrawNode.getComponent(cc.Graphics) as cc.Graphics;
+        return this._graphics;
+    }
 
     @property({type: cc.Prefab})
     public textButtonPrefab: cc.Prefab | undefined;
@@ -22,6 +29,16 @@ export class CharController extends cc.Component {
     public centerOffset: number = 0;
 
     initLevel(level: types.LevelData) {
+
+
+        if (!this.node.hasEventListener(cc.Node.EventType.TOUCH_CANCEL))
+            this.node.on(cc.Node.EventType.TOUCH_CANCEL, this.touchEnd, this);
+        if (!this.node.hasEventListener(cc.Node.EventType.TOUCH_END))
+            this.node.on(cc.Node.EventType.TOUCH_END, this.touchEnd, this);
+        if (!this.node.hasEventListener(cc.Node.EventType.TOUCH_MOVE))
+            this.node.on(cc.Node.EventType.TOUCH_MOVE, this.touchMove, this);
+
+
         this.clear();
         let letters = level.letters;
 
@@ -52,15 +69,6 @@ export class CharController extends cc.Component {
             button.activated = true;
             this.selectedButtons.push(button);
         }
-    }
-
-    start() {
-        this.node.on(cc.Node.EventType.TOUCH_CANCEL, this.touchEnd, this);
-        this.node.on(cc.Node.EventType.TOUCH_END, this.touchEnd, this);
-        this.node.on(cc.Node.EventType.TOUCH_MOVE, this.touchMove, this);
-
-        let lineDrawNode = this.node.getChildByName("LineDraw") as cc.Node;
-        this.graphics = lineDrawNode.getComponent(cc.Graphics) as cc.Graphics;
     }
 
     touchEnd(e: cc.EventTouch) {
@@ -99,6 +107,7 @@ export class CharController extends cc.Component {
                 }
             }
         }
+        console.log(this.charButtons.length);
 
         if (this.graphics) {
 
@@ -154,6 +163,9 @@ export class CharController extends cc.Component {
 
         if (backGround) this.node.addChild(backGround);
         if (lineDrawer) this.node.addChild(lineDrawer);
+
+        this.charButtons.length = 0;
+        this.selectedButtons.length = 0;
     }
 
 }

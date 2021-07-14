@@ -61,28 +61,36 @@ export class GameLayer extends cc.Component {
 
     //</editor-fold>
 
-    private charController: CharController | undefined;
-    private wordsTree: WordsTree | undefined;
     private level: types.LevelData | undefined;
+    private _charController: CharController | undefined;
+    private _wordsTree: WordsTree | undefined;
 
-    start() {
-
-        let wordsTreeNode = this.node.getChildByName('WordsTree') as cc.Node;
-        this.wordsTree = wordsTreeNode.getComponent(WordsTree) as WordsTree;
-
+    private get charController(): CharController {
+        if (this._charController) return this._charController;
         let charControllerNode = this.node.getChildByName('CharController') as cc.Node;
-        this.charController = charControllerNode.getComponent(CharController) as CharController;
-        this.charController.node.on(types.Event.WORD_CREATED, this.onWordCreated, this);
+        this._charController = charControllerNode.getComponent(CharController) as CharController;
+        return this._charController;
+    }
+
+    private get wordsTree(): WordsTree {
+        if (this._wordsTree) return this._wordsTree;
+        let wordsTreeNode = this.node.getChildByName('WordsTree') as cc.Node;
+        this._wordsTree = wordsTreeNode.getComponent(WordsTree) as WordsTree;
+        return this._wordsTree;
     }
 
     onWordCreated(word: string): void {
-        this.wordsTree?.onWordGuess(word);
+        this.wordsTree.onWordGuess(word);
     }
 
     initLevel(level: types.LevelData): void {
+
+        if (!this.node.hasEventListener(types.Event.WORD_CREATED))
+            this.node.on(types.Event.WORD_CREATED, this.onWordCreated, this);
+
         this.level = level;
-        this.wordsTree?.initLevel(level);
-        this.charController?.initLevel(level);
+        this.wordsTree.initLevel(level);
+        this.charController.initLevel(level);
 
         // применить необязательные переменные
         // задать дефолтные значения
@@ -91,8 +99,8 @@ export class GameLayer extends cc.Component {
 
     clear() {
         this.level = undefined;
-        this.wordsTree?.clear();
-        this.charController?.clear();
+        this.wordsTree.clear();
+        this.charController.clear();
     }
 
     setHSL(h?: number, s?: number, l?: number): void {
@@ -103,8 +111,7 @@ export class GameLayer extends cc.Component {
         let background = this.node.getChildByName('Background') as cc.Node;
         let backHSL = background?.getComponent(HSLController) as HSLController;
         backHSL?.setHSL(h, s, l);
-        this.charController?.setHSL(h, s, l);
-        this.wordsTree?.setHSL(h, s, l);
+        this.charController.setHSL(h, s, l);
+        this.wordsTree.setHSL(h, s, l);
     }
-
 }

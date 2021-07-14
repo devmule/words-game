@@ -69,12 +69,7 @@ export class WordsTree extends cc.Component {
         const rect = rectNode.getComponent(CharRect) as CharRect;
         this.tree[x][y] = rect;
         rect.setSize(squareSize, squareSize);
-
-
-        let scale = cc.tween().to(1, {scale: cc.v3(2, 2, 2)})
-        let angle = cc.tween().to(1, {angle: cc.v3(100, 100, 100)})
-        let position = cc.tween().to(1, {position: cc.v3(100, 100, 100)})
-        cc.tween(rectNode).then(position).then(angle).then(scale).start();
+        rect.text = '';
     }
 
     onWordGuess(word: string): boolean {
