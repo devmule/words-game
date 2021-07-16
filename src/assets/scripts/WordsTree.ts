@@ -72,6 +72,8 @@ export class WordsTree extends cc.Component {
         rect.text = char;
         rect.opened = false;
 
+        rect.node.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(types.Event.RECT_CLICKED, x, y), this);
+
         return rect;
     }
 
@@ -136,9 +138,13 @@ export class WordsTree extends cc.Component {
         return isWordGuessed;
     }
 
-    openRect(x: number, y: number): void {
+    openRect(x: number, y: number): boolean {
         let rect = this.tree[x][y] as CharRect;
-        rect.opened = true;
+        if (!rect.opened) {
+            rect.opened = true;
+            return true;
+        }
+        return false;
     }
 
     clear() {

@@ -62,6 +62,8 @@ export class GameLayer extends cc.Component {
     //</editor-fold>
 
     private level: types.LevelData | undefined;
+    private isHintOpenInTreeActive = false;
+
     private _charController: CharController | undefined;
     private _wordsTree: WordsTree | undefined;
 
@@ -92,6 +94,14 @@ export class GameLayer extends cc.Component {
     }
 
     onHintOpenInTree() {
+        this.isHintOpenInTreeActive = true;
+    }
+
+    onTreeRectClicked(x: number, y: number) {
+        if (this.isHintOpenInTreeActive) {
+            let wasOpened = this.wordsTree.openRect(x, y);
+            if (wasOpened) this.isHintOpenInTreeActive = false;
+        }
     }
 
     initLevel(level: types.LevelData): void {
@@ -104,6 +114,8 @@ export class GameLayer extends cc.Component {
             this.charController.node.on(types.Event.HINT_OP_RAND, this.onHintOpenRandom, this);
         if (!this.charController.node.hasEventListener(types.Event.HINT_OP_IN_TREE))
             this.charController.node.on(types.Event.HINT_OP_IN_TREE, this.onHintOpenInTree, this);
+        if (!this.wordsTree.node.hasEventListener(types.Event.RECT_CLICKED))
+            this.wordsTree.node.on(types.Event.RECT_CLICKED, this.onTreeRectClicked, this);
 
         this.level = level;
         this.wordsTree.initLevel(level);
