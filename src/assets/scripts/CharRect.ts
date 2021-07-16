@@ -7,6 +7,7 @@ export class CharRect extends cc.Component {
 
     private _textNode: cc.Node | undefined;
     private _backNode: cc.Node | undefined;
+    public text: string = '';
 
     private get textNode(): cc.Node {
         if (this._textNode) return this._textNode;
@@ -29,14 +30,14 @@ export class CharRect extends cc.Component {
         );
     }
 
-    set text(text: string) {
+    set opened(val: boolean) {
         let textComponent = this.textNode.getComponent(cc.RichText);
-        if (textComponent) textComponent.string = text.toUpperCase();
+        if (textComponent) textComponent.string = val ? this.text.toUpperCase() : '';
         else throw new Error(`Rectangle error: Text component is undefined!`);
     }
 
-    get text(): string {
+    get opened() {
         let textComponent = this.textNode.getComponent(cc.RichText);
-        return textComponent?.string || "";
+        return textComponent?.string !== '';
     }
 }

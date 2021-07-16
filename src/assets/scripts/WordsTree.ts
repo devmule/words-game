@@ -11,7 +11,7 @@ export class WordsTree extends cc.Component {
 
     private level: types.LevelData | undefined;
     private tree: (CharRect | null)[][] = [];
-    private words: { [id: string]: boolean; } = {};
+    private words: { [id: string]: CharRect[]; } = {};
 
     @property({type: cc.Prefab})
     public rectPrefab: cc.Prefab | undefined;
@@ -33,10 +33,10 @@ export class WordsTree extends cc.Component {
         for (let i = 0; i < level.words.length; i++) {
             const word: types.InTreeWord = level.words[i];
 
-            this.words[word.word] = true;
+            this.words[word.word] = [];
 
             for (let j = 0; j < word.word.length; j++) {
-                let x: number, y: number;
+                let x: number, y: number, char = word.word[j];
 
                 if (word.align === types.Align.hor) {
                     x = word.x + j;
@@ -50,14 +50,14 @@ export class WordsTree extends cc.Component {
                     throw new Error(`Level error: Unknown word align type!`);
                 }
 
-                this.createRect(x, y, squareSize);
+                this.words[word.word][j] = this.createRect(x, y, squareSize, char);
             }
         }
 
     }
 
-    createRect(x: number, y: number, squareSize: number) {
-        if (this.tree[x][y]) return;
+    createRect(x: number, y: number, squareSize: number, char: string): CharRect {
+        if (this.tree[x][y]) return this.tree[x][y] as CharRect;
 
         const rectNode = cc.instantiate(this.rectPrefab) as unknown as cc.Node;
         rectNode.setPosition(
@@ -69,31 +69,76 @@ export class WordsTree extends cc.Component {
         const rect = rectNode.getComponent(CharRect) as CharRect;
         this.tree[x][y] = rect;
         rect.setSize(squareSize, squareSize);
-        rect.text = '';
+        rect.text = char;
+        rect.opened = false;
+
+        return rect;
     }
 
-    onWordGuess(word: string): boolean {
-        let isWordGuessed = false;
+    openBeginRandomly(): void {
 
+        let allWords = Object.keys(this.words);
+        let maxLen = allWords.reduce((m, w) => Math.max(w.length, m), 0);
+
+        for (let i = 0; i < allWords.length; i++) {
+            maxLen = Math.max(maxLen, allWords[i].length);
+            let j = i + Math.floor(Math.random() * (allWords.length - i));
+            [allWords[i], allWords[j]] = [allWords[j], allWords[i]];
+        }
+
+        for (let offset = 0; offset < maxLen; offset++) {
+            for (let i = 0; i < allWords.length; i++) {
+
+                let textWord = allWords[i];
+                let rectWord = this.words[textWord];
+
+                if (rectWord[offset] !== undefined) {
+                    if (!rectWord[offset].opened) {
+
+                        // если нашлась подходящая не открытая буква - открыть её и завершить функцию
+                        rectWord[offset].opened = true;
+                        return;
+
+                    }
+
+                } else {
+                    // если слово уже закончилось - убрать его из списка
+                    allWords.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+    }
+
+    openWord(word: string): boolean {
+        let isWordGuessed = false;
         word = word.toLowerCase();
 
         if (word in this.words && this.words[word]) {
-            isWordGuessed = true;
-            this.words[word] = false;
+            // слово такое есть!
 
-            let inTreeWord = this.level?.words.find((w: types.InTreeWord) => w.word === word) as types.InTreeWord;
+            let rects = this.words[word];
+            // такое слово угадано полностью?
+            let isOpenedAlready = !rects.find((r: CharRect) => !r.opened);
 
-            for (let i = 0; i < inTreeWord.word.length; i++) {
+            if (!isOpenedAlready) {
+                // не все буквы в слове угаданы, открыть все буквы
+                isWordGuessed = true;
+                let inTreeWord = this.level?.words.find((w: types.InTreeWord) => w.word === word) as types.InTreeWord;
 
-                let x = inTreeWord.x + (inTreeWord.align === types.Align.hor ? i : 0),
-                    y = inTreeWord.y + (inTreeWord.align === types.Align.ver ? i : 0);
-
-                let rect = this.tree[x][y] as CharRect;
-                rect.text = inTreeWord.word[i] as string;
+                for (let i = 0; i < inTreeWord.word.length; i++) this.openRect(
+                    inTreeWord.x + (inTreeWord.align === types.Align.hor ? i : 0),
+                    inTreeWord.y + (inTreeWord.align === types.Align.ver ? i : 0)
+                );
             }
         }
 
         return isWordGuessed;
+    }
+
+    openRect(x: number, y: number): void {
+        let rect = this.tree[x][y] as CharRect;
+        rect.opened = true;
     }
 
     clear() {

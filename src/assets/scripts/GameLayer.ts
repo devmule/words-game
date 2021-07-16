@@ -80,7 +80,7 @@ export class GameLayer extends cc.Component {
     }
 
     onWordCreated(word: string): void {
-        this.wordsTree.onWordGuess(word);
+        let newWordOpened = this.wordsTree.openWord(word);
     }
 
     onHintShuffle() {
@@ -88,6 +88,7 @@ export class GameLayer extends cc.Component {
     }
 
     onHintOpenRandom() {
+        this.wordsTree.openBeginRandomly();
     }
 
     onHintOpenInTree() {
