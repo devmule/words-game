@@ -85,8 +85,8 @@ export class GameLayer extends cc.Component {
 
     initLevel(level: types.LevelData): void {
 
-        if (!this.node.hasEventListener(types.Event.WORD_CREATED))
-            this.node.on(types.Event.WORD_CREATED, this.onWordCreated, this);
+        if (!this.charController.node.hasEventListener(types.Event.WORD_CREATED))
+            this.charController.node.on(types.Event.WORD_CREATED, this.onWordCreated, this);
 
         this.level = level;
         this.wordsTree.initLevel(level);

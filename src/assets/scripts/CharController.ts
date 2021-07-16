@@ -14,12 +14,20 @@ export class CharController extends cc.Component {
     private charButtons: CharButton[] = [];
     private selectedButtons: CharButton[] = [];
     private _graphics: cc.Graphics | undefined;
+    private _hintText: cc.RichText | undefined;
 
     private get graphics(): cc.Graphics {
         if (this._graphics) return this._graphics;
         let lineDrawNode = this.node.getChildByName("LineDraw") as cc.Node;
         this._graphics = lineDrawNode.getComponent(cc.Graphics) as cc.Graphics;
         return this._graphics;
+    }
+
+    private get hintText(): cc.RichText {
+        if (this._hintText) return this._hintText;
+        let hintText = this.node.getChildByName("HintText") as cc.Node;
+        this._hintText = hintText.getComponent(cc.RichText) as cc.RichText;
+        return this._hintText;
     }
 
     @property({type: cc.Prefab})
@@ -73,8 +81,6 @@ export class CharController extends cc.Component {
 
     touchEnd(e: cc.EventTouch) {
 
-        this.graphics?.clear();
-
         let word = '';
         for (let i = 0; i < this.selectedButtons.length; i++) {
             let btn = this.selectedButtons[i];
@@ -85,6 +91,9 @@ export class CharController extends cc.Component {
             this.node.emit(types.Event.WORD_CREATED, word);
         }
         this.selectedButtons.length = 0;
+
+        this.graphics.clear();
+        this.updateHintText();
 
     }
 
@@ -104,42 +113,47 @@ export class CharController extends cc.Component {
                 if (btn.isCollidedByPoint(local)) {
                     btn.activated = true;
                     this.selectedButtons.push(btn);
+                    this.updateHintText();
                 }
             }
         }
-        console.log(this.charButtons.length);
 
-        if (this.graphics) {
 
-            local.set(-cursor.x, -cursor.y);
-            local = local.transformMat4(this.node.worldMatrix);
-            local.set(-local.x, -local.y);
+        local.set(-cursor.x, -cursor.y);
+        local = local.transformMat4(this.node.worldMatrix);
+        local.set(-local.x, -local.y);
 
-            const points = [...this.selectedButtons.map(btn => btn.node.position), local];
+        const points = [...this.selectedButtons.map(btn => btn.node.position), local];
 
-            this.graphics.clear();
+        this.graphics.clear();
 
-            if (points.length > 0) {
-                this.graphics.moveTo(points[0].x, points[0].y);
+        if (points.length > 0) {
+            this.graphics.moveTo(points[0].x, points[0].y);
 
-                for (let i = 0; i < points.length - 1; i++) {
-                    let p0 = (i > 0) ? points[i - 1] : points[0];
-                    let p1 = points[i];
-                    let p2 = points[i + 1];
-                    let p3 = (i != points.length - 2) ? points[i + 2] : p2;
+            for (let i = 0; i < points.length - 1; i++) {
+                let p0 = (i > 0) ? points[i - 1] : points[0];
+                let p1 = points[i];
+                let p2 = points[i + 1];
+                let p3 = (i != points.length - 2) ? points[i + 2] : p2;
 
-                    let cp1x = p1.x + (p2.x - p0.x) / 6;
-                    let cp1y = p1.y + (p2.y - p0.y) / 6;
+                let cp1x = p1.x + (p2.x - p0.x) / 6;
+                let cp1y = p1.y + (p2.y - p0.y) / 6;
 
-                    let cp2x = p2.x - (p3.x - p1.x) / 6;
-                    let cp2y = p2.y - (p3.y - p1.y) / 6;
+                let cp2x = p2.x - (p3.x - p1.x) / 6;
+                let cp2y = p2.y - (p3.y - p1.y) / 6;
 
-                    this.graphics.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
-                }
+                this.graphics.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
             }
-
-            this.graphics.stroke();
         }
+
+        this.graphics.stroke();
+    }
+
+    updateHintText() {
+        let word = '';
+        for (let i = 0; i < this.selectedButtons.length; i++)
+            word += this.selectedButtons[i].char;
+        this.hintText.string = word;
     }
 
     setHSL(h: number, s: number, l: number) {
@@ -151,21 +165,19 @@ export class CharController extends cc.Component {
     }
 
     clear() {
-        let lineDrawer: cc.Node | undefined;
-        let backGround: cc.Node | undefined;
+        // удалить все кнопки и обнулить параметры
 
-        while (this.node.children.length > 0) {
-            let child = this.node.children[0];
-            if (child.name === 'Background') backGround = child;
-            if (child.name === 'LineDraw') lineDrawer = child;
-            child.removeFromParent();
+        for (let i = 0; i < this.node.children.length; i++) {
+            let child = this.node.children[i] as cc.Node;
+            if (child.name === 'CharButton') {
+                child.removeFromParent();
+                i--;
+            }
         }
-
-        if (backGround) this.node.addChild(backGround);
-        if (lineDrawer) this.node.addChild(lineDrawer);
 
         this.charButtons.length = 0;
         this.selectedButtons.length = 0;
+        this.hintText.string = '';
     }
 
 }
