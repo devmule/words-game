@@ -1,6 +1,7 @@
 import * as cc from 'cc';
 import {CharButton} from "./CharButton";
 import * as types from "./Types";
+import * as env from "cc/env";
 import {HSLController} from "./HSLController";
 
 const {ccclass, property} = cc._decorator;
@@ -38,7 +39,6 @@ export class CharController extends cc.Component {
 
     initLevel(level: types.LevelData) {
 
-
         if (!this.node.hasEventListener(cc.Node.EventType.TOUCH_CANCEL))
             this.node.on(cc.Node.EventType.TOUCH_CANCEL, this.touchEnd, this);
         if (!this.node.hasEventListener(cc.Node.EventType.TOUCH_END))
@@ -46,30 +46,34 @@ export class CharController extends cc.Component {
         if (!this.node.hasEventListener(cc.Node.EventType.TOUCH_MOVE))
             this.node.on(cc.Node.EventType.TOUCH_MOVE, this.touchMove, this);
 
+        let btnHintShuffle = this.node.getChildByName('HintShuffle') as cc.Node;
+        let btnHintOpenRandom = this.node.getChildByName('HintOpenRandom') as cc.Node;
+        let btnHintOpenInTree = this.node.getChildByName('HintOpenInTree') as cc.Node;
+        if (!btnHintShuffle.hasEventListener(cc.Node.EventType.TOUCH_START))
+            btnHintShuffle.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(types.Event.HINT_SHUFFLE), this);
+        if (!btnHintOpenRandom.hasEventListener(cc.Node.EventType.TOUCH_START))
+            btnHintOpenRandom.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(types.Event.HINT_SHUFFLE), this);
+        if (!btnHintOpenInTree.hasEventListener(cc.Node.EventType.TOUCH_START))
+            btnHintOpenInTree.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(types.Event.HINT_SHUFFLE), this);
+
 
         this.clear();
         let letters = level.letters;
 
         const pref = this.textButtonPrefab as unknown as cc.Prefab;
-        const uit = (this.node.getComponent(cc.UITransform) as cc.UITransform).contentSize;
-        const sector = Math.PI * 2 / letters.length;
 
         for (let i = 0; i < letters.length; i++) {
 
-            const char = letters[i]
-
             let btnNode = cc.instantiate(pref) as unknown as cc.Node;
-            btnNode.setPosition(
-                Math.cos(i * sector) * (uit.width / 2 + this.centerOffset),
-                Math.sin(i * sector) * (uit.height / 2 + this.centerOffset)
-            );
 
             let charBtn = btnNode.getComponent(CharButton) as CharButton;
-            charBtn.char = char;
+            charBtn.char = letters[i];
 
             this.charButtons.push(charBtn);
             this.node.addChild(btnNode);
         }
+
+        this.shuffleButtons();
     }
 
     onButtonGestured(button: CharButton): void {
@@ -161,6 +165,35 @@ export class CharController extends cc.Component {
             let btnNode = this.charButtons[i].node as cc.Node;
             let charHSL = btnNode.getChildByName('Circle')?.getComponent(HSLController) as HSLController;
             charHSL.setHSL(h, s, l);
+        }
+    }
+
+    shuffleButtons() {
+        for (let i = 0; i < this.charButtons.length; i++) {
+            let j = i + Math.floor((this.charButtons.length - i) * Math.random());
+            [this.charButtons[i], this.charButtons[j]] = [this.charButtons[j], this.charButtons[i]];
+        }
+
+        const easing = 'cubicInOut';
+        const uit = (this.node.getComponent(cc.UITransform) as cc.UITransform).contentSize;
+        const sector = Math.PI * 2 / this.charButtons.length;
+
+        for (let i = 0; i < this.charButtons.length; i++) {
+            let btn = this.charButtons[i] as CharButton;
+            let to = cc.v3(
+                Math.cos(i * sector) * (uit.width / 2 + this.centerOffset),
+                Math.sin(i * sector) * (uit.height / 2 + this.centerOffset),
+            );
+
+            if (env.EDITOR) {
+                btn.node.position = to;
+            } else {
+                cc.Tween.stopAllByTarget(btn);
+                cc.tween(btn.node)
+                    .delay(0.3 * Math.random())
+                    .to(0.3 + 0.3 * Math.random(), {position: to}, {easing})
+                    .start();
+            }
         }
     }
 

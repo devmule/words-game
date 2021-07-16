@@ -83,10 +83,26 @@ export class GameLayer extends cc.Component {
         this.wordsTree.onWordGuess(word);
     }
 
+    onHintShuffle() {
+        this.charController.shuffleButtons();
+    }
+
+    onHintOpenRandom() {
+    }
+
+    onHintOpenInTree() {
+    }
+
     initLevel(level: types.LevelData): void {
 
         if (!this.charController.node.hasEventListener(types.Event.WORD_CREATED))
             this.charController.node.on(types.Event.WORD_CREATED, this.onWordCreated, this);
+        if (!this.charController.node.hasEventListener(types.Event.HINT_SHUFFLE))
+            this.charController.node.on(types.Event.HINT_SHUFFLE, this.onHintShuffle, this);
+        if (!this.charController.node.hasEventListener(types.Event.HINT_OP_RAND))
+            this.charController.node.on(types.Event.HINT_OP_RAND, this.onHintOpenRandom, this);
+        if (!this.charController.node.hasEventListener(types.Event.HINT_OP_IN_TREE))
+            this.charController.node.on(types.Event.HINT_OP_IN_TREE, this.onHintOpenInTree, this);
 
         this.level = level;
         this.wordsTree.initLevel(level);
