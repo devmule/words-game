@@ -112,6 +112,13 @@ export class WordsTree extends cc.Component {
         }
     }
 
+    openWordRandomly(): void {
+        let unopenedWords = Object.keys(this.words).filter(w => this.words[w].find(r => !r.opened));
+
+        let rectWord = this.words[unopenedWords[Math.floor(Math.random() * unopenedWords.length)]];
+        for (let i = 0; i < rectWord.length; i++) rectWord[i].opened = true;
+    }
+
     openWord(word: string): boolean {
         let isWordGuessed = false;
         word = word.toLowerCase();

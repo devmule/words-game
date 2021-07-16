@@ -7,6 +7,7 @@ export enum Event {
     HINT_SHUFFLE = "HINT_SHUFFLE",
     HINT_OP_RAND = "HINT_OPEN_RAND",
     HINT_OP_IN_TREE = "HINT_OP_IN_TREE",
+    HINT_OPEN_WORD = "HINT_OPEN_WORD",
 }
 
 

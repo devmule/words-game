@@ -97,6 +97,10 @@ export class GameLayer extends cc.Component {
         this.isHintOpenInTreeActive = true;
     }
 
+    onHintOpenWord() {
+        this.wordsTree.openWordRandomly();
+    }
+
     onTreeRectClicked(x: number, y: number) {
         if (this.isHintOpenInTreeActive) {
             let wasOpened = this.wordsTree.openRect(x, y);
@@ -114,6 +118,8 @@ export class GameLayer extends cc.Component {
             this.charController.node.on(types.Event.HINT_OP_RAND, this.onHintOpenRandom, this);
         if (!this.charController.node.hasEventListener(types.Event.HINT_OP_IN_TREE))
             this.charController.node.on(types.Event.HINT_OP_IN_TREE, this.onHintOpenInTree, this);
+        if (!this.charController.node.hasEventListener(types.Event.HINT_OPEN_WORD))
+            this.charController.node.on(types.Event.HINT_OPEN_WORD, this.onHintOpenWord, this);
         if (!this.wordsTree.node.hasEventListener(types.Event.RECT_CLICKED))
             this.wordsTree.node.on(types.Event.RECT_CLICKED, this.onTreeRectClicked, this);
 

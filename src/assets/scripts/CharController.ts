@@ -49,12 +49,15 @@ export class CharController extends cc.Component {
         let btnHintShuffle = this.node.getChildByName('HintShuffle') as cc.Node;
         let btnHintOpenRandom = this.node.getChildByName('HintOpenRandom') as cc.Node;
         let btnHintOpenInTree = this.node.getChildByName('HintOpenInTree') as cc.Node;
+        let btnHintOpenWord = this.node.getChildByName('HintOpenWord') as cc.Node;
         if (!btnHintShuffle.hasEventListener(cc.Node.EventType.TOUCH_START))
             btnHintShuffle.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(types.Event.HINT_SHUFFLE), this);
         if (!btnHintOpenRandom.hasEventListener(cc.Node.EventType.TOUCH_START))
             btnHintOpenRandom.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(types.Event.HINT_OP_RAND), this);
         if (!btnHintOpenInTree.hasEventListener(cc.Node.EventType.TOUCH_START))
             btnHintOpenInTree.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(types.Event.HINT_OP_IN_TREE), this);
+        if (!btnHintOpenWord.hasEventListener(cc.Node.EventType.TOUCH_START))
+            btnHintOpenWord.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(types.Event.HINT_OPEN_WORD), this);
 
 
         this.clear();
