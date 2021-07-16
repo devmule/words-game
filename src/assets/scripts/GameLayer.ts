@@ -94,7 +94,10 @@ export class GameLayer extends cc.Component {
     }
 
     onHintOpenInTree() {
-        this.isHintOpenInTreeActive = true;
+        if (!this.isHintOpenInTreeActive) {
+            console.log('go on');
+            this.isHintOpenInTreeActive = true;
+        }
     }
 
     onHintOpenWord() {
@@ -103,16 +106,25 @@ export class GameLayer extends cc.Component {
 
     onTreeRectClicked(x: number, y: number) {
         if (this.isHintOpenInTreeActive) {
+            console.log('opened')
             let wasOpened = this.wordsTree.openRect(x, y);
             if (wasOpened) this.isHintOpenInTreeActive = false;
         }
     }
 
     onLayerClicked(e: cc.Event) {
-        for (let target = e.target as cc.Node | null; target; target = target.parent) {
-            if (target !== this.wordsTree.node) {
+        if (this.isHintOpenInTreeActive) {
+
+            let isCharClicked = false;
+            for (let target = e.target as cc.Node | null; target != null; target = target.parent)
+                if (target.parent === this.wordsTree.node) {
+                    isCharClicked = true;
+                    break;
+                }
+
+            if (!isCharClicked) {
+                console.log('cancelled');
                 this.isHintOpenInTreeActive = false;
-                return;
             }
         }
     }
