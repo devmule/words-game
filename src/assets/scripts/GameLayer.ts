@@ -108,8 +108,19 @@ export class GameLayer extends cc.Component {
         }
     }
 
+    onLayerClicked(e: cc.Event) {
+        for (let target = e.target as cc.Node | null; target; target = target.parent) {
+            if (target !== this.wordsTree.node) {
+                this.isHintOpenInTreeActive = false;
+                return;
+            }
+        }
+    }
+
     initLevel(level: types.LevelData): void {
 
+        if (!this.node.hasEventListener(cc.Node.EventType.TOUCH_START))
+            this.node.on(cc.Node.EventType.TOUCH_START, this.onLayerClicked, this);
         if (!this.charController.node.hasEventListener(types.Event.WORD_CREATED))
             this.charController.node.on(types.Event.WORD_CREATED, this.onWordCreated, this);
         if (!this.charController.node.hasEventListener(types.Event.HINT_SHUFFLE))
