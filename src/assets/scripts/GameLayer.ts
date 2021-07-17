@@ -64,6 +64,8 @@ export class GameLayer extends cc.Component {
     private level: types.LevelData | undefined;
     private isHintOpenInTreeActive = false;
 
+    private isWon = false;
+
     private _charController: CharController | undefined;
     private _wordsTree: WordsTree | undefined;
 
@@ -82,6 +84,8 @@ export class GameLayer extends cc.Component {
     }
 
     onWordCreated(word: string): void {
+        if (this.isWon) return;
+
         let isWordOpened = this.wordsTree.openWord(word);
         if (isWordOpened) {
             // todo effects
@@ -90,32 +94,47 @@ export class GameLayer extends cc.Component {
     }
 
     onHintShuffle() {
+        if (this.isWon) return;
+
         this.charController.shuffleButtons();
     }
 
     onHintOpenCharRand() {
+        if (this.isWon) return;
+
         this.wordsTree.openCharRandomly();
         if (this.wordsTree.isWin) this.onWin();
     }
 
     onHintOpenInTree() {
+        if (this.isWon) return;
+
         if (!this.isHintOpenInTreeActive) {
             this.isHintOpenInTreeActive = true;
         }
     }
 
     onHintOpenWord() {
+        if (this.isWon) return;
+
         this.wordsTree.openWordRandomly();
         if (this.wordsTree.isWin) this.onWin();
     }
 
     onWin() {
-        // todo animations
-        // todo wait
-        this.node.emit(types.Event.ON_LEVEL_WIN);
+        this.isWon = true;
+
+        cc.tween(this.node)
+            .delay(1)
+            .call(() => this.wordsTree.destroyTree())
+            .delay(3)
+            .call(() => this.node.emit(types.Event.ON_LEVEL_WIN))
+            .start();
     }
 
     onTreeRectClicked(x: number, y: number) {
+        if (this.isWon) return;
+
         if (this.isHintOpenInTreeActive) {
             let wasOpened = this.wordsTree.openRect(x, y);
             if (wasOpened) {
@@ -126,6 +145,8 @@ export class GameLayer extends cc.Component {
     }
 
     onLayerClicked(e: cc.Event) {
+        if (this.isWon) return;
+
         if (this.isHintOpenInTreeActive) {
 
             let isCharClicked = false;
@@ -158,6 +179,7 @@ export class GameLayer extends cc.Component {
         if (!this.wordsTree.node.hasEventListener(types.Event.RECT_CLICKED))
             this.wordsTree.node.on(types.Event.RECT_CLICKED, this.onTreeRectClicked, this);
 
+        this.isWon = false;
         this.level = level;
         this.wordsTree.initLevel(level);
         this.charController.initLevel(level);
@@ -168,6 +190,7 @@ export class GameLayer extends cc.Component {
     }
 
     clear() {
+        this.isWon = false;
         this.level = undefined;
         this.wordsTree.clear();
         this.charController.clear();

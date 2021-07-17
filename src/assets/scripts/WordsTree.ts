@@ -1,4 +1,5 @@
 import * as cc from 'cc';
+import * as env from "cc/env";
 import * as types from "./Types";
 import {CharRect} from "./CharRect";
 import {HSLController} from "./HSLController";
@@ -60,25 +61,75 @@ export class WordsTree extends cc.Component {
         if (this.tree[x][y]) return this.tree[x][y] as CharRect;
 
         const rectNode = cc.instantiate(this.rectPrefab) as unknown as cc.Node;
-        rectNode.setPosition(
-            (x - (this.level as types.LevelData).w / 2 + .5) * squareSize,
-            -(y - (this.level as types.LevelData).h / 2 + .5) * squareSize
-        );
+        this.poseRect(rectNode, x, y, squareSize);
         this.node.addChild(rectNode);
 
         const rect = rectNode.getComponent(CharRect) as CharRect;
         this.tree[x][y] = rect;
         rect.setSize(squareSize, squareSize);
         rect.text = char;
-        rect.opened = false;
+        rect.close();
 
         rect.node.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(types.Event.RECT_CLICKED, x, y), this);
 
         return rect;
     }
 
+    poseRect(rectNode: cc.Node, x: number, y: number, squareSize: number): void {
+
+        let position = cc.v3(
+            (x - (this.level as types.LevelData).w / 2 + .5) * squareSize,
+            -(y - (this.level as types.LevelData).h / 2 + .5) * squareSize
+        );
+
+        if (env.EDITOR) {
+            rectNode.setPosition(position);
+        } else {
+            const easing = 'backInOut';
+            const duration = 1;
+            const maxDelay = 1;
+            let delay = (x + y) / ((this.level?.w || 0) + (this.level?.h || 0)) * maxDelay;
+
+            rectNode.setPosition(-500, 700);
+
+            cc.tween(rectNode)
+                .delay(delay)
+                .to(duration, {position}, {easing})
+                .start();
+        }
+    }
+
+    destroyTree(): void {
+        const level = this.level as types.LevelData;
+        const maxIndividualDelay = 1.5;
+        const duration = 1;
+
+        for (let x = 0; x < level.w; x++) for (let y = 0; y < level.h; y++) {
+            const rect = this.tree[x][y] as CharRect;
+            if (rect) {
+                const rectNode = rect.node;
+                const opacity = rectNode?.getComponent(cc.UIOpacity) as cc.UIOpacity;
+
+                const easing = 'backInOut';
+                const scale = cc.v3(0, 0, 0);
+
+                let individualDelay = (x + y) / (level.w + level.h) * maxIndividualDelay;
+
+                cc.tween(rectNode)
+                    .delay(individualDelay)
+                    .call(() => rect.close())
+                    .to(duration, {scale}, {easing})
+                    .start();
+                cc.tween(opacity)
+                    .delay(individualDelay)
+                    .to(duration, {opacity: 0}, {easing})
+                    .start();
+            }
+        }
+    }
+
     get isWin(): boolean {
-        let unopenedWords = Object.keys(this.words).filter(w => this.words[w].find(r => !r.opened));
+        let unopenedWords = Object.keys(this.words).filter(w => this.words[w].find(r => !r.isOpened));
         return unopenedWords.length === 0;
     }
 
@@ -100,10 +151,10 @@ export class WordsTree extends cc.Component {
                 let rectWord = this.words[textWord];
 
                 if (rectWord[offset] !== undefined) {
-                    if (!rectWord[offset].opened) {
+                    if (!rectWord[offset].isOpened) {
 
                         // если нашлась подходящая не открытая буква - открыть её и завершить функцию
-                        rectWord[offset].opened = true;
+                        rectWord[offset].open();
                         return;
 
                     }
@@ -118,11 +169,11 @@ export class WordsTree extends cc.Component {
     }
 
     openWordRandomly(): void {
-        let unopenedWords = Object.keys(this.words).filter(w => this.words[w].find(r => !r.opened));
+        let unopenedWords = Object.keys(this.words).filter(w => this.words[w].find(r => !r.isOpened));
         if (unopenedWords.length === 0) return;
 
-        let rectWord = this.words[unopenedWords[Math.floor(Math.random() * unopenedWords.length)]];
-        for (let i = 0; i < rectWord.length; i++) rectWord[i].opened = true;
+        // open random word
+        this.openWord(unopenedWords[Math.floor(Math.random() * unopenedWords.length)]);
     }
 
     openWord(word: string): boolean {
@@ -132,9 +183,9 @@ export class WordsTree extends cc.Component {
         if (word in this.words && this.words[word]) {
             // слово такое есть!
 
-            let rects = this.words[word];
+            const rects = this.words[word];
             // такое слово угадано полностью?
-            let isOpenedAlready = !rects.find((r: CharRect) => !r.opened);
+            let isOpenedAlready = !rects.find((r: CharRect) => !r.isOpened);
 
             if (!isOpenedAlready) {
                 // не все буквы в слове угаданы, открыть все буквы
@@ -143,7 +194,8 @@ export class WordsTree extends cc.Component {
 
                 for (let i = 0; i < inTreeWord.word.length; i++) this.openRect(
                     inTreeWord.x + (inTreeWord.align === types.Align.hor ? i : 0),
-                    inTreeWord.y + (inTreeWord.align === types.Align.ver ? i : 0)
+                    inTreeWord.y + (inTreeWord.align === types.Align.ver ? i : 0),
+                    i * 0.1
                 );
             }
         }
@@ -151,10 +203,10 @@ export class WordsTree extends cc.Component {
         return isWordGuessed;
     }
 
-    openRect(x: number, y: number): boolean {
+    openRect(x: number, y: number, delay: number = 0): boolean {
         let rect = this.tree[x][y] as CharRect;
-        if (!rect.opened) {
-            rect.opened = true;
+        if (!rect.isOpened) {
+            rect.open(delay);
             return true;
         }
         return false;

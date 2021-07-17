@@ -7,7 +7,7 @@ export class CharRect extends cc.Component {
 
     private _textNode: cc.Node | undefined;
     private _backNode: cc.Node | undefined;
-    public text: string = '';
+    private _isOpened = false;
 
     private get textNode(): cc.Node {
         if (this._textNode) return this._textNode;
@@ -30,13 +30,43 @@ export class CharRect extends cc.Component {
         );
     }
 
-    set opened(val: boolean) {
-        let textComponent = this.textNode.getComponent(cc.RichText) as cc.RichText;
-        textComponent.string = val ? this.text.toUpperCase() : '';
+    get text(): string {
+        return (this.textNode.getComponent(cc.RichText) as cc.RichText).string;
     }
 
-    get opened() {
-        let textComponent = this.textNode.getComponent(cc.RichText);
-        return textComponent?.string !== '';
+    set text(val: string) {
+        (this.textNode.getComponent(cc.RichText) as cc.RichText).string = val.toUpperCase();
+        if (this._isOpened) this.textNode.setScale(1, 1, 1);
+        else this.textNode.setScale(0, 0, 0);
+    }
+
+    get isOpened() {
+        return this._isOpened;
+    }
+
+    open(delay: number = 0) {
+        if (this._isOpened) return;
+        this._isOpened = true;
+
+        const s0 = cc.v3(0, 0, 0);
+        const s1 = cc.v3(1, 1, 1);
+        const easing = 'backInOut';
+        this.textNode.setScale(s0);
+        cc.tween(this.textNode)
+            .delay(delay)
+            .to(.5, {scale: s1}, {easing})
+            .start();
+    }
+
+    close(delay: number = 0) {
+        if (!this._isOpened) return;
+        this._isOpened = false;
+
+        const s0 = cc.v3(0, 0, 0);
+        const easing = 'backInOut';
+        cc.tween(this.textNode)
+            .delay(delay)
+            .to(.5, {scale: s0}, {easing})
+            .start();
     }
 }
