@@ -77,7 +77,12 @@ export class WordsTree extends cc.Component {
         return rect;
     }
 
-    openBeginRandomly(): void {
+    get isWin(): boolean {
+        let unopenedWords = Object.keys(this.words).filter(w => this.words[w].find(r => !r.opened));
+        return unopenedWords.length === 0;
+    }
+
+    openCharRandomly(): void {
 
         let allWords = Object.keys(this.words);
         let maxLen = allWords.reduce((m, w) => Math.max(w.length, m), 0);
@@ -114,6 +119,7 @@ export class WordsTree extends cc.Component {
 
     openWordRandomly(): void {
         let unopenedWords = Object.keys(this.words).filter(w => this.words[w].find(r => !r.opened));
+        if (unopenedWords.length === 0) return;
 
         let rectWord = this.words[unopenedWords[Math.floor(Math.random() * unopenedWords.length)]];
         for (let i = 0; i < rectWord.length; i++) rectWord[i].opened = true;

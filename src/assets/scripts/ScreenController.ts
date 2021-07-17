@@ -55,20 +55,21 @@ export class ScreenController extends cc.Component {
     openScreen(screenNode: cc.Node, immediately: boolean) {
 
         const easing = 'cubicInOut';
-        const s = 0;
         const d = 1;
         const opacity = screenNode.getComponent(cc.UIOpacity) as cc.UIOpacity;
 
         this.node.addChild(screenNode);
 
         if (!immediately && !env.EDITOR) {
+            screenNode.setPosition(0, 1000, 0);
+            screenNode.setScale(1, 1, 1);
+            opacity.opacity = 0;
+
             cc.tween(screenNode)
-                .to(s, {position: cc.v3(0, 1000, 0), scale: cc.v3(1, 1, 1)})
                 .to(d, {position: cc.v3(0, 0, 0), scale: cc.v3(1, 1, 1)}, {easing})
                 .call(() => null)
                 .start();
             cc.tween(opacity)
-                .to(s, {opacity: 0})
                 .to(d, {opacity: 255}, {easing})
                 .start();
         }

@@ -82,15 +82,20 @@ export class GameLayer extends cc.Component {
     }
 
     onWordCreated(word: string): void {
-        let newWordOpened = this.wordsTree.openWord(word);
+        let isWordOpened = this.wordsTree.openWord(word);
+        if (isWordOpened) {
+            // todo effects
+            if (this.wordsTree.isWin) this.onWin();
+        }
     }
 
     onHintShuffle() {
         this.charController.shuffleButtons();
     }
 
-    onHintOpenRandom() {
-        this.wordsTree.openBeginRandomly();
+    onHintOpenCharRand() {
+        this.wordsTree.openCharRandomly();
+        if (this.wordsTree.isWin) this.onWin();
     }
 
     onHintOpenInTree() {
@@ -101,12 +106,22 @@ export class GameLayer extends cc.Component {
 
     onHintOpenWord() {
         this.wordsTree.openWordRandomly();
+        if (this.wordsTree.isWin) this.onWin();
+    }
+
+    onWin() {
+        // todo animations
+        // todo wait
+        this.node.emit(types.Event.ON_LEVEL_WIN);
     }
 
     onTreeRectClicked(x: number, y: number) {
         if (this.isHintOpenInTreeActive) {
             let wasOpened = this.wordsTree.openRect(x, y);
-            if (wasOpened) this.isHintOpenInTreeActive = false;
+            if (wasOpened) {
+                this.isHintOpenInTreeActive = false;
+                if (this.wordsTree.isWin) this.onWin();
+            }
         }
     }
 
@@ -134,8 +149,8 @@ export class GameLayer extends cc.Component {
             this.charController.node.on(types.Event.WORD_CREATED, this.onWordCreated, this);
         if (!this.charController.node.hasEventListener(types.Event.HINT_SHUFFLE))
             this.charController.node.on(types.Event.HINT_SHUFFLE, this.onHintShuffle, this);
-        if (!this.charController.node.hasEventListener(types.Event.HINT_OP_RAND))
-            this.charController.node.on(types.Event.HINT_OP_RAND, this.onHintOpenRandom, this);
+        if (!this.charController.node.hasEventListener(types.Event.HINT_OP_CHAR_RAND))
+            this.charController.node.on(types.Event.HINT_OP_CHAR_RAND, this.onHintOpenCharRand, this);
         if (!this.charController.node.hasEventListener(types.Event.HINT_OP_IN_TREE))
             this.charController.node.on(types.Event.HINT_OP_IN_TREE, this.onHintOpenInTree, this);
         if (!this.charController.node.hasEventListener(types.Event.HINT_OPEN_WORD))

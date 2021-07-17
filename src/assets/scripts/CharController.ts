@@ -53,7 +53,7 @@ export class CharController extends cc.Component {
         if (!btnHintShuffle.hasEventListener(cc.Node.EventType.TOUCH_START))
             btnHintShuffle.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(types.Event.HINT_SHUFFLE), this);
         if (!btnHintOpenRandom.hasEventListener(cc.Node.EventType.TOUCH_START))
-            btnHintOpenRandom.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(types.Event.HINT_OP_RAND), this);
+            btnHintOpenRandom.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(types.Event.HINT_OP_CHAR_RAND), this);
         if (!btnHintOpenInTree.hasEventListener(cc.Node.EventType.TOUCH_START))
             btnHintOpenInTree.on(cc.Node.EventType.TOUCH_START, (e: cc.Event) => {
                 e.propagationStopped = e.propagationImmediateStopped = true;
