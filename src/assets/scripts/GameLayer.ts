@@ -95,7 +95,6 @@ export class GameLayer extends cc.Component {
 
     onHintOpenInTree() {
         if (!this.isHintOpenInTreeActive) {
-            console.log('go on');
             this.isHintOpenInTreeActive = true;
         }
     }
@@ -106,7 +105,6 @@ export class GameLayer extends cc.Component {
 
     onTreeRectClicked(x: number, y: number) {
         if (this.isHintOpenInTreeActive) {
-            console.log('opened')
             let wasOpened = this.wordsTree.openRect(x, y);
             if (wasOpened) this.isHintOpenInTreeActive = false;
         }
@@ -123,7 +121,6 @@ export class GameLayer extends cc.Component {
                 }
 
             if (!isCharClicked) {
-                console.log('cancelled');
                 this.isHintOpenInTreeActive = false;
             }
         }

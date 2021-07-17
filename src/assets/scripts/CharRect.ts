@@ -31,9 +31,8 @@ export class CharRect extends cc.Component {
     }
 
     set opened(val: boolean) {
-        let textComponent = this.textNode.getComponent(cc.RichText);
-        if (textComponent) textComponent.string = val ? this.text.toUpperCase() : '';
-        else throw new Error(`Rectangle error: Text component is undefined!`);
+        let textComponent = this.textNode.getComponent(cc.RichText) as cc.RichText;
+        textComponent.string = val ? this.text.toUpperCase() : '';
     }
 
     get opened() {
