@@ -13,6 +13,8 @@ export class WordsTree extends cc.Component {
     private level: types.LevelData | undefined;
     private tree: (CharRect | null)[][] = [];
     private words: { [id: string]: CharRect[]; } = {};
+    private w: number = 0;
+    private h: number = 0;
 
     @property({type: cc.Prefab})
     public rectPrefab: cc.Prefab | undefined;
@@ -22,14 +24,20 @@ export class WordsTree extends cc.Component {
         this.clear();
         this.level = level;
 
-        for (let x = 0; x < level.w; x++) {
+        for (let i = 0; i < level.words.length; i++) {
+            let word = level.words[i] as types.InTreeWord;
+            this.w = Math.max(this.w, word.x + (word.align === types.Align.hor ? word.word.length : 1));
+            this.h = Math.max(this.h, word.y + (word.align === types.Align.ver ? word.word.length : 1));
+        }
+
+        for (let x = 0; x < this.w; x++) {
             this.tree[x] = [];
-            for (let y = 0; y < level.h; y++)
+            for (let y = 0; y < this.h; y++)
                 this.tree[x][y] = null;
         }
 
         const uit = (this.node.getComponent(cc.UITransform) as cc.UITransform).contentSize;
-        const squareSize = Math.min(uit.width / level.w, uit.height / level.h);
+        const squareSize = Math.min(uit.width / this.w, uit.height / this.h);
 
         for (let i = 0; i < level.words.length; i++) {
             const word: types.InTreeWord = level.words[i];
@@ -78,8 +86,8 @@ export class WordsTree extends cc.Component {
     poseRect(rectNode: cc.Node, x: number, y: number, squareSize: number): void {
 
         let position = cc.v3(
-            (x - (this.level as types.LevelData).w / 2 + .5) * squareSize,
-            -(y - (this.level as types.LevelData).h / 2 + .5) * squareSize
+            (x - this.w / 2 + .5) * squareSize,
+            -(y - this.h / 2 + .5) * squareSize
         );
 
         if (env.EDITOR) {
@@ -88,7 +96,7 @@ export class WordsTree extends cc.Component {
             const easing = 'backInOut';
             const duration = 1;
             const maxDelay = 1;
-            let delay = (x + y) / ((this.level?.w || 0) + (this.level?.h || 0)) * maxDelay;
+            let delay = (x + y) / (this.w + this.h) * maxDelay;
 
             rectNode.setPosition(-500, 700);
 
@@ -104,7 +112,7 @@ export class WordsTree extends cc.Component {
         const maxIndividualDelay = 1.5;
         const duration = 1;
 
-        for (let x = 0; x < level.w; x++) for (let y = 0; y < level.h; y++) {
+        for (let x = 0; x < this.w; x++) for (let y = 0; y < this.h; y++) {
             const rect = this.tree[x][y] as CharRect;
             if (rect) {
                 const rectNode = rect.node;
@@ -113,7 +121,7 @@ export class WordsTree extends cc.Component {
                 const easing = 'backInOut';
                 const scale = cc.v3(0, 0, 0);
 
-                let individualDelay = (x + y) / (level.w + level.h) * maxIndividualDelay;
+                let individualDelay = (x + y) / (this.w + this.h) * maxIndividualDelay;
 
                 cc.tween(rectNode)
                     .delay(individualDelay)
@@ -218,6 +226,7 @@ export class WordsTree extends cc.Component {
         this.level = undefined;
         this.words = {};
         this.tree = [];
+        this.w = this.h = 0;
     }
 
     setHSL(h: number, s: number, l: number) {

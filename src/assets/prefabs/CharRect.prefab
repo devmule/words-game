@@ -281,7 +281,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 200.1,
-      "height": 504
+      "height": 315
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -305,7 +305,7 @@
     "__prefab": {
       "__id__": 14
     },
-    "_lineHeight": 400,
+    "_lineHeight": 250,
     "_string": "A",
     "_horizontalAlign": 1,
     "_fontSize": 300,
@@ -314,7 +314,7 @@
     "_font": null,
     "_isSystemFontUsed": true,
     "_userDefinedFont": null,
-    "_cacheMode": 2,
+    "_cacheMode": 0,
     "_imageAtlas": null,
     "_handleTouchEvent": true,
     "_id": ""

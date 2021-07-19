@@ -200,9 +200,6 @@
     "__prefab": {
       "__id__": 8
     },
-    "H": 0,
-    "S": 0,
-    "L": 0,
     "_id": ""
   },
   {
@@ -314,7 +311,7 @@
     "_font": null,
     "_isSystemFontUsed": true,
     "_userDefinedFont": null,
-    "_cacheMode": 1,
+    "_cacheMode": 0,
     "_imageAtlas": null,
     "_handleTouchEvent": true,
     "_id": ""

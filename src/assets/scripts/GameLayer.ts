@@ -21,7 +21,7 @@ export class GameLayer extends cc.Component {
     public set updatePrefab(val: boolean) {
         if (val === this.__updatePrefab) return;
         this.__updatePrefab = val;
-        if (val) this.initLevel(types.tempLevel);
+        if (val) this.initLevel(types.tempLevels[0]);
         else this.clear();
     }
 

@@ -43,7 +43,7 @@ export class ScreenController extends cc.Component {
             const d = 1;
 
             cc.tween(screenNode)
-                .to(d, {position: cc.v3(0, -1000, 0), scale: cc.v3(1, 1, 1)}, {easing})
+                .to(d, {position: cc.v3(0, -1000, 0), scale: cc.v3(0.25, 0.25, 0.25)}, {easing})
                 .call(() => screenNode.removeFromParent())
                 .start();
             cc.tween(opacity)
@@ -62,7 +62,7 @@ export class ScreenController extends cc.Component {
 
         if (!immediately && !env.EDITOR) {
             screenNode.setPosition(0, 1000, 0);
-            screenNode.setScale(1, 1, 1);
+            screenNode.setScale(0.25, 0.25, 0.25);
             opacity.opacity = 0;
 
             cc.tween(screenNode)
