@@ -2,56 +2,66 @@ import * as types from "./Types";
 
 
 export type UserData = {
-    nickname: string
-    level: number
+
+    levelIndex: number
 
     money: number
 
     hintOpenCharRand: number
     hintOpenWordRand: number
-    hintOpenInTree: number
+    hintOpenDirectly: number
+
 }
 
 
 export class User {
 
-    public nickname: string = '';
-    public level: number = 0;
+    private _levelIndex: number = 0;
 
-    public money: number = 0;
+    private _money: number = 0;
 
-    private hintOpenCharRand: number = 0;
-    private hintOpenWordRand: number = 0;
-    private hintOpenInTree: number = 0;
+    private _hintOpenCharRand: number = 0;
+    private _hintOpenWordRand: number = 0;
+    private _hintOpenDirectly: number = 0;
 
-    init(userdata: UserData) {
+    // ===========================================================================
 
-        this.nickname = userdata.nickname;
-        this.level = userdata.level;
+    public init(userdata: UserData) {
 
-        this.money = userdata.money;
+        this._levelIndex = userdata.levelIndex;
 
-        this.hintOpenCharRand = userdata.hintOpenCharRand;
-        this.hintOpenWordRand = userdata.hintOpenWordRand;
-        this.hintOpenInTree = userdata.hintOpenInTree;
+        this._money = userdata.money;
+
+        this._hintOpenCharRand = userdata.hintOpenCharRand;
+        this._hintOpenWordRand = userdata.hintOpenWordRand;
+        this._hintOpenDirectly = userdata.hintOpenDirectly;
 
     }
 
-    raw(): UserData {
+    public raw(): UserData {
 
         return {
 
-            nickname: this.nickname,
-            level: this.level,
+            levelIndex: this._levelIndex,
 
-            money: this.money,
+            money: this._money,
 
-            hintOpenCharRand: this.hintOpenCharRand,
-            hintOpenWordRand: this.hintOpenWordRand,
-            hintOpenInTree: this.hintOpenInTree,
+            hintOpenCharRand: this._hintOpenCharRand,
+            hintOpenWordRand: this._hintOpenWordRand,
+            hintOpenDirectly: this._hintOpenDirectly,
 
         };
 
+    }
+
+    // ===========================================================================
+
+    public getLevelIndex(): number {
+        return this._levelIndex;
+    }
+
+    public incrementLevelIndex(): void {
+        this._levelIndex++;
     }
 
 }

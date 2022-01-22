@@ -40,14 +40,15 @@ export class Root extends cc.Component {
     start() {
 
         this.user.init({
-            nickname: 'test user',
-            level: 0,
+
+            levelIndex: 0,
 
             money: 9999,
 
             hintOpenCharRand: 10,
             hintOpenWordRand: 10,
-            hintOpenInTree: 10,
+            hintOpenDirectly: 10,
+
         });
 
         this.screenController = this.node.getComponent(ScreenController) as ScreenController;
@@ -84,16 +85,20 @@ export class Root extends cc.Component {
     // =================================================================================================================
     onWin() {
 
-        this.user.level++;
-
-        if (this.user.level >= types.tempLevels.length) this.user.level = 0;
-        let level = types.tempLevels[this.user.level];
+        this.user.incrementLevelIndex();
+        let level = types.tempLevels[this.user.getLevelIndex()];
 
         this.openLevel(level);
 
     }
 
     onPlayClick() {
-        this.openLevel(types.tempLevels[this.user.level]);
+        let levelIndex = this.user.getLevelIndex()
+        let levelData = types.tempLevels[levelIndex];
+        if (levelData != null) {
+            this.openLevel(levelData);
+        } else {
+            this.openMenu();
+        }
     }
 }
