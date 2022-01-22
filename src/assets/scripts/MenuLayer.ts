@@ -1,5 +1,5 @@
 import * as cc from 'cc';
-import * as types from "./Types";
+import {WGEvent} from "./Types";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;
 
@@ -20,15 +20,15 @@ export class MenuLayer extends cc.Component {
     }
 
     playClicked() {
-        this.node.emit(types.Event.ON_GO_PLAY_CLICK);
+        this.node.emit(WGEvent.ON_GO_PLAY_CLICK);
     }
 
     levelsClicked() {
-        this.node.emit(types.Event.ON_GO_LEVEL_CLICK);
+        this.node.emit(WGEvent.ON_GO_LEVEL_CLICK);
     }
 
     shopClicked() {
-        this.node.emit(types.Event.ON_GO_SHOP_CLICK);
+        this.node.emit(WGEvent.ON_GO_SHOP_CLICK);
     }
 
 }

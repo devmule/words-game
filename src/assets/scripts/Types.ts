@@ -1,4 +1,4 @@
-export enum Event {
+export enum WGEvent {
 
     // game level events
     BUTTON_GESTURED = "BUTTON_GESTURED",

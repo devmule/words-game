@@ -1,5 +1,4 @@
 import * as cc from "cc";
-import * as types from "./Types";
 import * as env from "cc/env";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;

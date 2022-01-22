@@ -2,7 +2,7 @@ import * as cc from 'cc';
 
 const {ccclass, property} = cc._decorator;
 
-import {ColorRGBARaw} from "./Types";
+import {ColorRGBARaw, LevelVisualData} from "./Types";
 
 @ccclass('CharButton')
 export class CharButton extends cc.Component {
@@ -18,7 +18,7 @@ export class CharButton extends cc.Component {
         return textNode.getComponent(cc.Label) as cc.Label;
     }
 
-    private  get spriteComponent(): cc.Sprite {
+    private get spriteComponent(): cc.Sprite {
         let textNode = this.node.getChildByName("Circle") as cc.Node;
         return textNode.getComponent(cc.Sprite) as cc.Sprite;
     }
@@ -28,15 +28,15 @@ export class CharButton extends cc.Component {
     }
 
 
-    @property({type: cc.Color})
-    public set inactiveColor(color: cc.Color | ColorRGBARaw | undefined) {
-        if (color instanceof cc.Color) this._inactiveColor = color;
-        else if (color != null) this._inactiveColor.set(...color);
+    @property({type: cc.CCBoolean})
+    public set activated(val: boolean) {
+        if (this._activated === val) return;
+        this._activated = val;
         this.updateActiveColor();
     }
 
-    public get inactiveColor(): cc.Color {
-        return this._inactiveColor;
+    public get activated(): boolean {
+        return this._activated;
     }
 
 
@@ -49,6 +49,18 @@ export class CharButton extends cc.Component {
 
     public get activeColor(): cc.Color {
         return this._activeColor;
+    }
+
+
+    @property({type: cc.Color})
+    public set inactiveColor(color: cc.Color | ColorRGBARaw | undefined) {
+        if (color instanceof cc.Color) this._inactiveColor = color;
+        else if (color != null) this._inactiveColor.set(...color);
+        this.updateActiveColor();
+    }
+
+    public get inactiveColor(): cc.Color {
+        return this._inactiveColor;
     }
 
 
@@ -84,17 +96,6 @@ export class CharButton extends cc.Component {
 
     get char(): string {
         return this._char;
-    }
-
-    set activated(val: boolean) {
-        if (this._activated !== val) {
-            this._activated = val;
-            this.updateActiveColor();
-        }
-    }
-
-    get activated(): boolean {
-        return this._activated;
     }
 
     start() {

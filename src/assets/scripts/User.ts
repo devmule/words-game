@@ -1,6 +1,3 @@
-import * as types from "./Types";
-
-
 export type UserData = {
 
     levelIndex: number

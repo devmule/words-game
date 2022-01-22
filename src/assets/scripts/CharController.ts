@@ -1,6 +1,6 @@
 import * as cc from 'cc';
 import {CharButton} from "./CharButton";
-import * as types from "./Types";
+import {LevelData, WGEvent} from "./Types";
 import * as env from "cc/env";
 import {ColorRGBARaw} from "./Types";
 
@@ -41,7 +41,7 @@ export class CharController extends cc.Component {
     @property({type: cc.CCInteger})
     public centerOffset: number = 0;
 
-    initLevel(levelData: types.LevelData) {
+    initLevel(levelData: LevelData) {
 
         if (!this.node.hasEventListener(cc.Node.EventType.TOUCH_CANCEL))
             this.node.on(cc.Node.EventType.TOUCH_CANCEL, this.touchEnd, this);
@@ -55,16 +55,16 @@ export class CharController extends cc.Component {
         let btnHintOpenInTree = this.node.getChildByName('HintOpenInTree') as cc.Node;
         let btnHintOpenWord = this.node.getChildByName('HintOpenWord') as cc.Node;
         if (!btnHintShuffle.hasEventListener(cc.Node.EventType.TOUCH_START))
-            btnHintShuffle.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(types.Event.HINT_SHUFFLE), this);
+            btnHintShuffle.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(WGEvent.HINT_SHUFFLE), this);
         if (!btnHintOpenRandom.hasEventListener(cc.Node.EventType.TOUCH_START))
-            btnHintOpenRandom.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(types.Event.HINT_OP_CHAR_RAND), this);
+            btnHintOpenRandom.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(WGEvent.HINT_OP_CHAR_RAND), this);
         if (!btnHintOpenInTree.hasEventListener(cc.Node.EventType.TOUCH_START))
             btnHintOpenInTree.on(cc.Node.EventType.TOUCH_START, (e: cc.Event) => {
                 e.propagationStopped = e.propagationImmediateStopped = true;
-                this.node.emit(types.Event.HINT_OP_IN_TREE)
+                this.node.emit(WGEvent.HINT_OP_IN_TREE)
             }, this);
         if (!btnHintOpenWord.hasEventListener(cc.Node.EventType.TOUCH_START))
-            btnHintOpenWord.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(types.Event.HINT_OPEN_WORD), this);
+            btnHintOpenWord.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(WGEvent.HINT_OPEN_WORD), this);
 
 
         this.clear();
@@ -78,8 +78,8 @@ export class CharController extends cc.Component {
 
             let charBtn = btnNode.getComponent(CharButton) as CharButton;
             charBtn.char = letters[i];
-            charBtn.inactiveColor = levelData.visualData?.primaryColor;
-            charBtn.activeColor = levelData.visualData?.secondaryColor;
+            charBtn.activeColor = levelData.visualData?.primaryColor;
+            charBtn.inactiveColor = levelData.visualData?.secondaryColor;
             charBtn.fontColor = levelData.visualData?.fontColor;
 
             this.charButtons.push(charBtn);
@@ -105,7 +105,7 @@ export class CharController extends cc.Component {
             word += btn.char;
         }
         if (word.length > 0) {
-            this.node.emit(types.Event.WORD_CREATED, word);
+            this.node.emit(WGEvent.WORD_CREATED, word);
         }
         this.selectedButtons.length = 0;
 

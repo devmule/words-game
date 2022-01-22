@@ -1,6 +1,6 @@
 import * as cc from 'cc';
 import * as env from "cc/env";
-import * as types from "./Types";
+import {Align, InTreeWord, LevelData, WGEvent} from "./Types";
 import {CharRect} from "./CharRect";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;
@@ -9,7 +9,7 @@ const {ccclass, property, executeInEditMode} = cc._decorator;
 @executeInEditMode
 export class WordsTree extends cc.Component {
 
-    private levelData: types.LevelData | undefined;
+    private levelData: LevelData | undefined;
     private tree: (CharRect | null)[][] = [];
     private words: { [id: string]: CharRect[]; } = {};
     private w: number = 0;
@@ -18,15 +18,15 @@ export class WordsTree extends cc.Component {
     @property({type: cc.Prefab})
     public rectPrefab: cc.Prefab | undefined;
 
-    initLevel(levelData: types.LevelData) {
+    initLevel(levelData: LevelData) {
 
         this.clear();
         this.levelData = levelData;
 
         for (let i = 0; i < levelData.words.length; i++) {
-            let word = levelData.words[i] as types.InTreeWord;
-            this.w = Math.max(this.w, word.x + (word.align === types.Align.hor ? word.word.length : 1));
-            this.h = Math.max(this.h, word.y + (word.align === types.Align.ver ? word.word.length : 1));
+            let word = levelData.words[i] as InTreeWord;
+            this.w = Math.max(this.w, word.x + (word.align === Align.hor ? word.word.length : 1));
+            this.h = Math.max(this.h, word.y + (word.align === Align.ver ? word.word.length : 1));
         }
 
         for (let x = 0; x < this.w; x++) {
@@ -39,18 +39,18 @@ export class WordsTree extends cc.Component {
         const squareSize = Math.min(uit.width / this.w, uit.height / this.h);
 
         for (let i = 0; i < levelData.words.length; i++) {
-            const word: types.InTreeWord = levelData.words[i];
+            const word: InTreeWord = levelData.words[i];
 
             this.words[word.word] = [];
 
             for (let j = 0; j < word.word.length; j++) {
                 let x: number, y: number, char = word.word[j];
 
-                if (word.align === types.Align.hor) {
+                if (word.align === Align.hor) {
                     x = word.x + j;
                     y = word.y;
 
-                } else if (word.align === types.Align.ver) {
+                } else if (word.align === Align.ver) {
                     x = word.x;
                     y = word.y + j;
 
@@ -81,7 +81,7 @@ export class WordsTree extends cc.Component {
         rect.text = char;
         rect.close();
 
-        rect.node.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(types.Event.RECT_CLICKED, x, y), this);
+        rect.node.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(WGEvent.RECT_CLICKED, x, y), this);
 
         return rect;
     }
@@ -111,7 +111,7 @@ export class WordsTree extends cc.Component {
     }
 
     destroyTree(): void {
-        const level = this.levelData as types.LevelData;
+        const level = this.levelData as LevelData;
         const maxIndividualDelay = 1.5;
         const duration = 1;
 
@@ -201,11 +201,11 @@ export class WordsTree extends cc.Component {
             if (!isOpenedAlready) {
                 // не все буквы в слове угаданы, открыть все буквы
                 isWordGuessed = true;
-                let inTreeWord = this.levelData?.words.find((w: types.InTreeWord) => w.word === word) as types.InTreeWord;
+                let inTreeWord = this.levelData?.words.find((w: InTreeWord) => w.word === word) as InTreeWord;
 
                 for (let i = 0; i < inTreeWord.word.length; i++) this.openRect(
-                    inTreeWord.x + (inTreeWord.align === types.Align.hor ? i : 0),
-                    inTreeWord.y + (inTreeWord.align === types.Align.ver ? i : 0),
+                    inTreeWord.x + (inTreeWord.align === Align.hor ? i : 0),
+                    inTreeWord.y + (inTreeWord.align === Align.ver ? i : 0),
                     i * 0.1
                 );
             }

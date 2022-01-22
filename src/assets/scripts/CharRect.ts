@@ -25,11 +25,8 @@ export class CharRect extends cc.Component {
 
     @property({type: cc.Color})
     public set backColor(color: cc.Color | ColorRGBARaw | undefined) {
-        if (color instanceof cc.Color) {
-            this.backSprite.color = color;
-        } else if (color != null) {
-            this.backSprite.color.set(...color);
-        }
+        if (color instanceof cc.Color) this.backSprite.color = color;
+        else if (color != null) this.backSprite.color.set(...color);
     }
 
     public get backColor(): cc.Color {
@@ -39,11 +36,8 @@ export class CharRect extends cc.Component {
 
     @property({type: cc.Color})
     public set fontColor(color: cc.Color | ColorRGBARaw | undefined) {
-        if (color instanceof cc.Color) {
-            this.textComponent.color = color;
-        } else if (color != null) {
-            this.textComponent.color.set(...color);
-        }
+        if (color instanceof cc.Color) this.textComponent.color = color;
+        else if (color != null) this.textComponent.color.set(...color);
     }
 
     public get fontColor(): cc.Color {

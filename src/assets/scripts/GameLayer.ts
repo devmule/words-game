@@ -1,5 +1,5 @@
 import * as cc from 'cc';
-import * as types from "./Types";
+import {LevelData, WGEvent} from "./Types";
 import {WordsTree} from "./WordsTree";
 import {CharController} from "./CharController";
 
@@ -9,7 +9,7 @@ const {ccclass, property, executeInEditMode} = cc._decorator;
 @executeInEditMode
 export class GameLayer extends cc.Component {
 
-    private levelData: types.LevelData | undefined;
+    private levelData: LevelData | undefined;
     private isHintOpenDirectlyActive = false;
 
     private isWon = false;
@@ -76,7 +76,7 @@ export class GameLayer extends cc.Component {
             .delay(1)
             .call(() => this.wordsTree.destroyTree())
             .delay(3)
-            .call(() => this.node.emit(types.Event.ON_LEVEL_WIN))
+            .call(() => this.node.emit(WGEvent.ON_LEVEL_WIN))
             .start();
     }
 
@@ -110,22 +110,22 @@ export class GameLayer extends cc.Component {
         }
     }
 
-    initLevel(level: types.LevelData): void {
+    initLevel(level: LevelData): void {
 
         if (!this.node.hasEventListener(cc.Node.EventType.TOUCH_START))
             this.node.on(cc.Node.EventType.TOUCH_START, this.onLayerClicked, this);
-        if (!this.charController.node.hasEventListener(types.Event.WORD_CREATED))
-            this.charController.node.on(types.Event.WORD_CREATED, this.onWordCreated, this);
-        if (!this.charController.node.hasEventListener(types.Event.HINT_SHUFFLE))
-            this.charController.node.on(types.Event.HINT_SHUFFLE, this.onHintShuffle, this);
-        if (!this.charController.node.hasEventListener(types.Event.HINT_OP_CHAR_RAND))
-            this.charController.node.on(types.Event.HINT_OP_CHAR_RAND, this.onHintOpenCharRand, this);
-        if (!this.charController.node.hasEventListener(types.Event.HINT_OP_IN_TREE))
-            this.charController.node.on(types.Event.HINT_OP_IN_TREE, this.onHintOpenInTree, this);
-        if (!this.charController.node.hasEventListener(types.Event.HINT_OPEN_WORD))
-            this.charController.node.on(types.Event.HINT_OPEN_WORD, this.onHintOpenWord, this);
-        if (!this.wordsTree.node.hasEventListener(types.Event.RECT_CLICKED))
-            this.wordsTree.node.on(types.Event.RECT_CLICKED, this.onTreeRectClicked, this);
+        if (!this.charController.node.hasEventListener(WGEvent.WORD_CREATED))
+            this.charController.node.on(WGEvent.WORD_CREATED, this.onWordCreated, this);
+        if (!this.charController.node.hasEventListener(WGEvent.HINT_SHUFFLE))
+            this.charController.node.on(WGEvent.HINT_SHUFFLE, this.onHintShuffle, this);
+        if (!this.charController.node.hasEventListener(WGEvent.HINT_OP_CHAR_RAND))
+            this.charController.node.on(WGEvent.HINT_OP_CHAR_RAND, this.onHintOpenCharRand, this);
+        if (!this.charController.node.hasEventListener(WGEvent.HINT_OP_IN_TREE))
+            this.charController.node.on(WGEvent.HINT_OP_IN_TREE, this.onHintOpenInTree, this);
+        if (!this.charController.node.hasEventListener(WGEvent.HINT_OPEN_WORD))
+            this.charController.node.on(WGEvent.HINT_OPEN_WORD, this.onHintOpenWord, this);
+        if (!this.wordsTree.node.hasEventListener(WGEvent.RECT_CLICKED))
+            this.wordsTree.node.on(WGEvent.RECT_CLICKED, this.onTreeRectClicked, this);
 
         this.isWon = false;
         this.levelData = level;
