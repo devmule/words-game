@@ -11,24 +11,16 @@ export class GameLayer extends cc.Component {
 
     private levelData: LevelData | undefined;
     private isHintOpenDirectlyActive = false;
-
     private isWon = false;
 
-    private _charController: CharController | undefined;
-    private _wordsTree: WordsTree | undefined;
-
     private get charController(): CharController {
-        if (this._charController) return this._charController;
         let charControllerNode = this.node.getChildByName('CharController') as cc.Node;
-        this._charController = charControllerNode.getComponent(CharController) as CharController;
-        return this._charController;
+        return charControllerNode.getComponent(CharController) as CharController;
     }
 
     private get wordsTree(): WordsTree {
-        if (this._wordsTree) return this._wordsTree;
         let wordsTreeNode = this.node.getChildByName('WordsTree') as cc.Node;
-        this._wordsTree = wordsTreeNode.getComponent(WordsTree) as WordsTree;
-        return this._wordsTree;
+        return wordsTreeNode.getComponent(WordsTree) as WordsTree;
     }
 
     onWordCreated(word: string): void {

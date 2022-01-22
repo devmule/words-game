@@ -1,3 +1,8 @@
+import * as cc from 'cc';
+
+const {ccclass} = cc._decorator;
+
+
 export type UserData = {
 
     levelIndex: number
@@ -10,7 +15,7 @@ export type UserData = {
 
 }
 
-
+@ccclass('User')
 export class User {
 
     private _levelIndex: number = 0;

@@ -2,7 +2,6 @@ import * as cc from 'cc';
 import {CharButton} from "./CharButton";
 import {LevelData, WGEvent} from "./Types";
 import * as env from "cc/env";
-import {ColorRGBARaw} from "./Types";
 
 const {ccclass, property} = cc._decorator;
 
@@ -15,8 +14,6 @@ export class CharController extends cc.Component {
     private charButtons: CharButton[] = [];
     private selectedButtons: CharButton[] = [];
     private _graphics: cc.Graphics | undefined;
-    private _hintText: cc.RichText | undefined;
-    private _hintTextColor: cc.Color = new cc.Color();
 
     private get graphics(): cc.Graphics {
         if (this._graphics) return this._graphics;
@@ -25,14 +22,9 @@ export class CharController extends cc.Component {
         return this._graphics;
     }
 
-    private get hintText(): cc.RichText {
-        if (this._hintText) return this._hintText;
+    private get hintText(): cc.Label {
         let hintText = this.node.getChildByName("HintText") as cc.Node;
-        this._hintText = hintText.getComponent(cc.RichText) as cc.RichText;
-        return this._hintText;
-    }
-
-    private setHintTextColor(color: ColorRGBARaw) {
+        return hintText.getComponent(cc.Label) as cc.Label;
     }
 
     @property({type: cc.Prefab})
@@ -77,6 +69,7 @@ export class CharController extends cc.Component {
             let btnNode = cc.instantiate(pref) as unknown as cc.Node;
 
             let charBtn = btnNode.getComponent(CharButton) as CharButton;
+            charBtn.activated = false;
             charBtn.char = letters[i];
             charBtn.activeColor = levelData.visualData?.primaryColor;
             charBtn.inactiveColor = levelData.visualData?.secondaryColor;

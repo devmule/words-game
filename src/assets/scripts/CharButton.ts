@@ -2,23 +2,19 @@ import * as cc from 'cc';
 
 const {ccclass, property} = cc._decorator;
 
-import {ColorRGBARaw, LevelVisualData} from "./Types";
+import {ColorRGBARaw} from "./Types";
 
 @ccclass('CharButton')
 export class CharButton extends cc.Component {
 
-    private _char: string = '';
-    private _inactiveColor: cc.Color = new cc.Color();
-    private _activeColor: cc.Color = new cc.Color();
-    private _activated: boolean = false;
-
+    private _char: string = "";
 
     private get textComponent(): cc.Label {
         let textNode = this.node.getChildByName("Text") as cc.Node;
         return textNode.getComponent(cc.Label) as cc.Label;
     }
 
-    private get spriteComponent(): cc.Sprite {
+    private get circleSprite(): cc.Sprite {
         let textNode = this.node.getChildByName("Circle") as cc.Node;
         return textNode.getComponent(cc.Sprite) as cc.Sprite;
     }
@@ -27,6 +23,9 @@ export class CharButton extends cc.Component {
         return this.node.getComponent(cc.UITransform) as cc.UITransform;
     }
 
+
+    @property
+    private _activated: boolean = false;
 
     @property({type: cc.CCBoolean})
     public set activated(val: boolean) {
@@ -40,6 +39,9 @@ export class CharButton extends cc.Component {
     }
 
 
+    @property
+    private _activeColor: cc.Color = new cc.Color();
+
     @property({type: cc.Color})
     public set activeColor(color: cc.Color | ColorRGBARaw | undefined) {
         if (color instanceof cc.Color) this._activeColor = color;
@@ -51,6 +53,9 @@ export class CharButton extends cc.Component {
         return this._activeColor;
     }
 
+
+    @property
+    private _inactiveColor: cc.Color = new cc.Color();
 
     @property({type: cc.Color})
     public set inactiveColor(color: cc.Color | ColorRGBARaw | undefined) {
@@ -76,7 +81,7 @@ export class CharButton extends cc.Component {
 
 
     private updateActiveColor() {
-        this.spriteComponent.color = this._activated ? this.activeColor : this.inactiveColor;
+        this.circleSprite.color = this._activated ? this._activeColor : this._inactiveColor;
     }
 
 
@@ -96,9 +101,5 @@ export class CharButton extends cc.Component {
 
     get char(): string {
         return this._char;
-    }
-
-    start() {
-        this.updateActiveColor();
     }
 }
