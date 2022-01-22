@@ -145,26 +145,3 @@ export const tempLevels: LevelData[] = [
         extraWords: [],
     }
 ];
-
-
-export type UserData = {
-    nickname: string
-    level: number
-
-    money: number
-
-    hintOpenCharRand: number
-    hintOpenWordRand: number
-    hintOpenInTree: number
-}
-
-export const tempUser: UserData = {
-    nickname: 'test user',
-    level: 0,
-
-    money: 9999,
-
-    hintOpenCharRand: 10,
-    hintOpenWordRand: 10,
-    hintOpenInTree: 10,
-}

@@ -2,8 +2,7 @@ import * as cc from 'cc';
 import {ScreenController} from "./ScreenController";
 import * as types from "./Types";
 import {GameLayer} from "./GameLayer";
-import {Player} from "./Player";
-import {LevelData} from "./Types";
+import {User} from "./User";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;
 
@@ -36,25 +35,39 @@ export class Root extends cc.Component {
     public layerLevelPrefab: cc.Prefab | undefined;
 
     private screenController: ScreenController | undefined;
-    private player: Player | undefined;
+    private user: User = new User();
 
     start() {
-        this.player = new Player(types.tempUser);
+
+        this.user.init({
+            nickname: 'test user',
+            level: 0,
+
+            money: 9999,
+
+            hintOpenCharRand: 10,
+            hintOpenWordRand: 10,
+            hintOpenInTree: 10,
+        });
 
         this.screenController = this.node.getComponent(ScreenController) as ScreenController;
         this.openMenu(true);
+
     }
 
     openMenu(immediately: boolean = false) {
+
         this.screenController?.closeAll(immediately);
 
         let menuNode = cc.instantiate(this.layerMenuPrefab) as unknown as cc.Node;
         menuNode.on(types.Event.ON_GO_PLAY_CLICK, this.onPlayClick, this);
 
         this.screenController?.addScreen(menuNode, immediately);
+
     }
 
     openLevel(levelData: types.LevelData, immediately: boolean = false) {
+
         this.screenController?.closeAll(immediately);
 
         let levelNode = cc.instantiate(this.layerLevelPrefab) as unknown as cc.Node;
@@ -64,21 +77,23 @@ export class Root extends cc.Component {
         level.initLevel(levelData);
 
         this.screenController?.addScreen(levelNode, immediately);
+
     }
 
 
     // =================================================================================================================
     onWin() {
-        let player = this.player as Player;
-        player.userdata.level++;
 
-        if (player.userdata.level >= types.tempLevels.length) player.userdata.level = 0;
-        let level = types.tempLevels[player.userdata.level];
+        this.user.level++;
+
+        if (this.user.level >= types.tempLevels.length) this.user.level = 0;
+        let level = types.tempLevels[this.user.level];
 
         this.openLevel(level);
+
     }
 
     onPlayClick() {
-        this.openLevel(types.tempLevels[(this.player as Player).userdata.level]);
+        this.openLevel(types.tempLevels[this.user.level]);
     }
 }
