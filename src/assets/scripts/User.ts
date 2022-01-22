@@ -1,8 +1,3 @@
-import * as cc from 'cc';
-
-const {ccclass} = cc._decorator;
-
-
 export type UserData = {
 
     levelIndex: number
@@ -15,7 +10,6 @@ export type UserData = {
 
 }
 
-@ccclass('User')
 export class User {
 
     private _levelIndex: number = 0;
@@ -64,6 +58,72 @@ export class User {
 
     public incrementLevelIndex(): void {
         this._levelIndex++;
+    }
+
+    // ===========================================================================
+
+    public get hintOpenCharRandCount(): number {
+        return this._hintOpenCharRand;
+    }
+
+    public canUseHintOpenCharRand(): boolean {
+        return this._hintOpenCharRand > 0 || this._money > 0;
+    }
+
+    public useHintOpenCharRand(): boolean {
+        if (this._hintOpenCharRand > 0) {
+            this._hintOpenCharRand--
+            return true;
+        }
+        if (this._money > 0) {
+            this._money--
+            return true;
+        }
+        return false
+    }
+
+    // ===========================================================================
+
+    public get hintOpenWordRandCount(): number {
+        return this._hintOpenWordRand;
+    }
+
+    public canUseHintOpenWordRand(): boolean {
+        return this._hintOpenWordRand > 0 || this._money > 0;
+    }
+
+    public useHintOpenWordRand(): boolean {
+        if (this._hintOpenWordRand > 0) {
+            this._hintOpenWordRand--
+            return true;
+        }
+        if (this._money > 0) {
+            this._money--
+            return true;
+        }
+        return false
+    }
+
+    // ===========================================================================
+
+    public get hintOpenDirectlyCount(): number {
+        return this._hintOpenDirectly;
+    }
+
+    public canUseHintOpenDirectly(): boolean {
+        return this._hintOpenDirectly > 0 || this._money > 0;
+    }
+
+    public useHintOpenDirectly(): boolean {
+        if (this._hintOpenDirectly > 0) {
+            this._hintOpenDirectly--
+            return true;
+        }
+        if (this._money > 0) {
+            this._money--
+            return true;
+        }
+        return false
     }
 
 }

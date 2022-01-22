@@ -2,7 +2,7 @@ import * as cc from 'cc';
 
 const {ccclass, property} = cc._decorator;
 
-import {ColorRGBARaw} from "./Types";
+import {ColorRGBARaw} from "../../Types";
 
 @ccclass('CharButton')
 export class CharButton extends cc.Component {

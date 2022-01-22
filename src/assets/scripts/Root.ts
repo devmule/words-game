@@ -1,7 +1,7 @@
 import * as cc from 'cc';
-import {ScreenController} from "./ScreenController";
+import {LayersController} from "./LayersController";
 import {tempLevels, WGEvent, LevelData} from "./Types";
-import {GameLayer} from "./GameLayer";
+import {GameLayer} from "./layers/game/GameLayer";
 import {User} from "./User";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;
@@ -10,31 +10,13 @@ const {ccclass, property, executeInEditMode} = cc._decorator;
 @executeInEditMode
 export class Root extends cc.Component {
 
-    //<editor-fold desc="/// editor only">
-    private _isMenu: boolean = false;
-
-    @property({type: cc.CCBoolean})
-    public set isMenu(val: boolean) {
-        if (val === this._isMenu) return;
-
-        this._isMenu = val;
-        if (val) this.openMenu();
-        else this.openLevel(tempLevels[0]);
-    }
-
-    public get isMenu(): boolean {
-        return this._isMenu;
-    }
-
-    //</editor-fold>
-
     @property({type: cc.Prefab})
     public layerMenuPrefab: cc.Prefab | undefined;
 
     @property({type: cc.Prefab})
     public layerLevelPrefab: cc.Prefab | undefined;
 
-    private screenController: ScreenController | undefined;
+    private screenController: LayersController | undefined;
     private user: User = new User();
 
     start() {
@@ -51,7 +33,7 @@ export class Root extends cc.Component {
 
         });
 
-        this.screenController = this.node.getComponent(ScreenController) as ScreenController;
+        this.screenController = this.node.getComponent(LayersController) as LayersController;
         this.openMenu(true);
 
     }
@@ -63,7 +45,7 @@ export class Root extends cc.Component {
         let menuNode = cc.instantiate(this.layerMenuPrefab) as unknown as cc.Node;
         menuNode.on(WGEvent.ON_GO_PLAY_CLICK, this.onPlayClick, this);
 
-        this.screenController?.addScreen(menuNode, immediately);
+        this.screenController?.addLayer(menuNode, immediately);
 
     }
 
@@ -74,10 +56,10 @@ export class Root extends cc.Component {
         let levelNode = cc.instantiate(this.layerLevelPrefab) as unknown as cc.Node;
         levelNode.on(WGEvent.ON_LEVEL_WIN, this.onWin, this);
 
-        let level = levelNode.getComponent(GameLayer) as GameLayer;
-        level.initLevel(levelData);
+        let gameLayer = levelNode.getComponent(GameLayer) as GameLayer;
+        gameLayer.initLevel(levelData);
 
-        this.screenController?.addScreen(levelNode, immediately);
+        this.screenController?.addLayer(levelNode, immediately);
 
     }
 

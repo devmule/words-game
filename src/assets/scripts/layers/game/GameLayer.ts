@@ -1,25 +1,26 @@
 import * as cc from 'cc';
-import {LevelData, WGEvent} from "./Types";
+import {LevelData, WGEvent} from "../../Types";
 import {WordsTree} from "./WordsTree";
 import {CharController} from "./CharController";
+import {LayerBase} from "../LayerBase";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;
 
 @ccclass('GameLayer')
 @executeInEditMode
-export class GameLayer extends cc.Component {
+export class GameLayer extends LayerBase {
 
     private levelData: LevelData | undefined;
     private isHintOpenDirectlyActive = false;
     private isWon = false;
 
     private get charController(): CharController {
-        let charControllerNode = this.node.getChildByName('CharController') as cc.Node;
+        let charControllerNode = this.layerRoot.getChildByName('CharController') as cc.Node;
         return charControllerNode.getComponent(CharController) as CharController;
     }
 
     private get wordsTree(): WordsTree {
-        let wordsTreeNode = this.node.getChildByName('WordsTree') as cc.Node;
+        let wordsTreeNode = this.layerRoot.getChildByName('WordsTree') as cc.Node;
         return wordsTreeNode.getComponent(WordsTree) as WordsTree;
     }
 

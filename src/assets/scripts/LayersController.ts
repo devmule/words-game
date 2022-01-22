@@ -3,34 +3,34 @@ import * as env from "cc/env";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;
 
-@ccclass('ScreenController')
+@ccclass('LayersController')
 @executeInEditMode
-export class ScreenController extends cc.Component {
+export class LayersController extends cc.Component {
 
     // screens
     closeTop(immediately: boolean = false): cc.Node | undefined {
         let screenNode = this.node.children[this.node.children.length - 1] as cc.Node | undefined;
-        if (screenNode) this.closeScreen(screenNode, immediately);
+        if (screenNode) this.closeLayer(screenNode, immediately);
         return screenNode;
     }
 
-    addScreen(content: cc.Node, immediately: boolean = false) {
+    addLayer(content: cc.Node, immediately: boolean = false) {
 
         const screenNode = new cc.Node('screen');
         screenNode.addChild(content);
 
         screenNode.addComponent(cc.UIOpacity);
 
-        this.openScreen(screenNode, immediately);
+        this.openLayer(screenNode, immediately);
     }
 
     closeAll(immediately: boolean = false) {
         let children = this.node.children.map(c => c);
         for (let i = 0; i < children.length; i++)
-            this.closeScreen(children[i], immediately);
+            this.closeLayer(children[i], immediately);
     }
 
-    closeScreen(screenNode: cc.Node, immediately: boolean) {
+    closeLayer(screenNode: cc.Node, immediately: boolean) {
 
         const opacity = screenNode.getComponent(cc.UIOpacity) as cc.UIOpacity;
 
@@ -51,7 +51,7 @@ export class ScreenController extends cc.Component {
         }
     }
 
-    openScreen(screenNode: cc.Node, immediately: boolean) {
+    openLayer(screenNode: cc.Node, immediately: boolean) {
 
         const easing = 'cubicInOut';
         const d = 1;

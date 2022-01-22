@@ -1,6 +1,6 @@
 import * as cc from 'cc';
 import * as env from "cc/env";
-import {Align, InTreeWord, LevelData, WGEvent} from "./Types";
+import {Align, InTreeWord, LevelData, WGEvent} from "../../Types";
 import {CharRect} from "./CharRect";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;

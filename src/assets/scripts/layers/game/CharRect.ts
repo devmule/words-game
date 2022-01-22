@@ -1,5 +1,5 @@
 import * as cc from 'cc';
-import {ColorRGBARaw} from "./Types";
+import {ColorRGBARaw} from "../../Types";
 
 const {ccclass, property} = cc._decorator;
 
