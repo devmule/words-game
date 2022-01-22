@@ -9,8 +9,8 @@ const {ccclass, property, executeInEditMode} = cc._decorator;
 @executeInEditMode
 export class GameLayer extends cc.Component {
 
-    private level: types.LevelData | undefined;
-    private isHintOpenInTreeActive = false;
+    private levelData: types.LevelData | undefined;
+    private isHintOpenDirectlyActive = false;
 
     private isWon = false;
 
@@ -57,8 +57,8 @@ export class GameLayer extends cc.Component {
     onHintOpenInTree() {
         if (this.isWon) return;
 
-        if (!this.isHintOpenInTreeActive) {
-            this.isHintOpenInTreeActive = true;
+        if (!this.isHintOpenDirectlyActive) {
+            this.isHintOpenDirectlyActive = true;
         }
     }
 
@@ -83,10 +83,10 @@ export class GameLayer extends cc.Component {
     onTreeRectClicked(x: number, y: number) {
         if (this.isWon) return;
 
-        if (this.isHintOpenInTreeActive) {
+        if (this.isHintOpenDirectlyActive) {
             let wasOpened = this.wordsTree.openRect(x, y);
             if (wasOpened) {
-                this.isHintOpenInTreeActive = false;
+                this.isHintOpenDirectlyActive = false;
                 if (this.wordsTree.isWin) this.onWin();
             }
         }
@@ -95,7 +95,7 @@ export class GameLayer extends cc.Component {
     onLayerClicked(e: cc.Event) {
         if (this.isWon) return;
 
-        if (this.isHintOpenInTreeActive) {
+        if (this.isHintOpenDirectlyActive) {
 
             let isCharClicked = false;
             for (let target = e.target as cc.Node | null; target != null; target = target.parent)
@@ -105,7 +105,7 @@ export class GameLayer extends cc.Component {
                 }
 
             if (!isCharClicked) {
-                this.isHintOpenInTreeActive = false;
+                this.isHintOpenDirectlyActive = false;
             }
         }
     }
@@ -128,7 +128,7 @@ export class GameLayer extends cc.Component {
             this.wordsTree.node.on(types.Event.RECT_CLICKED, this.onTreeRectClicked, this);
 
         this.isWon = false;
-        this.level = level;
+        this.levelData = level;
         this.wordsTree.initLevel(level);
         this.charController.initLevel(level);
 
@@ -136,7 +136,7 @@ export class GameLayer extends cc.Component {
 
     clear() {
         this.isWon = false;
-        this.level = undefined;
+        this.levelData = undefined;
         this.wordsTree.clear();
         this.charController.clear();
     }

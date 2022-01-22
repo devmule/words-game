@@ -2,6 +2,7 @@ import * as cc from 'cc';
 import {CharButton} from "./CharButton";
 import * as types from "./Types";
 import * as env from "cc/env";
+import {ColorRGBARaw} from "./Types";
 
 const {ccclass, property} = cc._decorator;
 
@@ -15,6 +16,7 @@ export class CharController extends cc.Component {
     private selectedButtons: CharButton[] = [];
     private _graphics: cc.Graphics | undefined;
     private _hintText: cc.RichText | undefined;
+    private _hintTextColor: cc.Color = new cc.Color();
 
     private get graphics(): cc.Graphics {
         if (this._graphics) return this._graphics;
@@ -30,13 +32,16 @@ export class CharController extends cc.Component {
         return this._hintText;
     }
 
+    private setHintTextColor(color: ColorRGBARaw) {
+    }
+
     @property({type: cc.Prefab})
     public textButtonPrefab: cc.Prefab | undefined;
 
     @property({type: cc.CCInteger})
     public centerOffset: number = 0;
 
-    initLevel(level: types.LevelData) {
+    initLevel(levelData: types.LevelData) {
 
         if (!this.node.hasEventListener(cc.Node.EventType.TOUCH_CANCEL))
             this.node.on(cc.Node.EventType.TOUCH_CANCEL, this.touchEnd, this);
@@ -63,7 +68,7 @@ export class CharController extends cc.Component {
 
 
         this.clear();
-        let letters = level.letters;
+        let letters = levelData.letters;
 
         const pref = this.textButtonPrefab as unknown as cc.Prefab;
 
@@ -73,6 +78,9 @@ export class CharController extends cc.Component {
 
             let charBtn = btnNode.getComponent(CharButton) as CharButton;
             charBtn.char = letters[i];
+            charBtn.inactiveColor = levelData.visualData?.primaryColor;
+            charBtn.activeColor = levelData.visualData?.secondaryColor;
+            charBtn.fontColor = levelData.visualData?.fontColor;
 
             this.charButtons.push(charBtn);
             this.node.addChild(btnNode);

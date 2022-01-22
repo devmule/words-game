@@ -606,7 +606,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 0,
+      "width": 178.9,
       "height": 75.6
     },
     "_anchorPoint": {
@@ -632,7 +632,7 @@
       "__id__": 25
     },
     "_lineHeight": 60,
-    "_string": "",
+    "_string": "TEXT",
     "_horizontalAlign": 1,
     "_fontSize": 70,
     "_maxWidth": 0,
@@ -1539,20 +1539,6 @@
     "__prefab": {
       "__id__": 69
     },
-    "defaultColor": {
-      "__type__": "cc.Color",
-      "r": 196,
-      "g": 220,
-      "b": 241,
-      "a": 255
-    },
-    "activeColor": {
-      "__type__": "cc.Color",
-      "r": 126,
-      "g": 187,
-      "b": 241,
-      "a": 255
-    },
     "_id": ""
   },
   {
@@ -1928,20 +1914,6 @@
     "_enabled": true,
     "__prefab": {
       "__id__": 89
-    },
-    "defaultColor": {
-      "__type__": "cc.Color",
-      "r": 196,
-      "g": 220,
-      "b": 241,
-      "a": 255
-    },
-    "activeColor": {
-      "__type__": "cc.Color",
-      "r": 126,
-      "g": 187,
-      "b": 241,
-      "a": 255
     },
     "_id": ""
   },
@@ -2319,20 +2291,6 @@
     "__prefab": {
       "__id__": 109
     },
-    "defaultColor": {
-      "__type__": "cc.Color",
-      "r": 196,
-      "g": 220,
-      "b": 241,
-      "a": 255
-    },
-    "activeColor": {
-      "__type__": "cc.Color",
-      "r": 126,
-      "g": 187,
-      "b": 241,
-      "a": 255
-    },
     "_id": ""
   },
   {
@@ -2708,20 +2666,6 @@
     "_enabled": true,
     "__prefab": {
       "__id__": 129
-    },
-    "defaultColor": {
-      "__type__": "cc.Color",
-      "r": 196,
-      "g": 220,
-      "b": 241,
-      "a": 255
-    },
-    "activeColor": {
-      "__type__": "cc.Color",
-      "r": 126,
-      "g": 187,
-      "b": 241,
-      "a": 255
     },
     "_id": ""
   },
@@ -3099,20 +3043,6 @@
     "__prefab": {
       "__id__": 149
     },
-    "defaultColor": {
-      "__type__": "cc.Color",
-      "r": 196,
-      "g": 220,
-      "b": 241,
-      "a": 255
-    },
-    "activeColor": {
-      "__type__": "cc.Color",
-      "r": 126,
-      "g": 187,
-      "b": 241,
-      "a": 255
-    },
     "_id": ""
   },
   {
@@ -3488,20 +3418,6 @@
     "_enabled": true,
     "__prefab": {
       "__id__": 169
-    },
-    "defaultColor": {
-      "__type__": "cc.Color",
-      "r": 196,
-      "g": 220,
-      "b": 241,
-      "a": 255
-    },
-    "activeColor": {
-      "__type__": "cc.Color",
-      "r": 126,
-      "g": 187,
-      "b": 241,
-      "a": 255
     },
     "_id": ""
   },

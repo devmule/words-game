@@ -9,7 +9,7 @@ const {ccclass, property, executeInEditMode} = cc._decorator;
 @executeInEditMode
 export class WordsTree extends cc.Component {
 
-    private level: types.LevelData | undefined;
+    private levelData: types.LevelData | undefined;
     private tree: (CharRect | null)[][] = [];
     private words: { [id: string]: CharRect[]; } = {};
     private w: number = 0;
@@ -18,13 +18,13 @@ export class WordsTree extends cc.Component {
     @property({type: cc.Prefab})
     public rectPrefab: cc.Prefab | undefined;
 
-    initLevel(level: types.LevelData) {
+    initLevel(levelData: types.LevelData) {
 
         this.clear();
-        this.level = level;
+        this.levelData = levelData;
 
-        for (let i = 0; i < level.words.length; i++) {
-            let word = level.words[i] as types.InTreeWord;
+        for (let i = 0; i < levelData.words.length; i++) {
+            let word = levelData.words[i] as types.InTreeWord;
             this.w = Math.max(this.w, word.x + (word.align === types.Align.hor ? word.word.length : 1));
             this.h = Math.max(this.h, word.y + (word.align === types.Align.ver ? word.word.length : 1));
         }
@@ -38,8 +38,8 @@ export class WordsTree extends cc.Component {
         const uit = (this.node.getComponent(cc.UITransform) as cc.UITransform).contentSize;
         const squareSize = Math.min(uit.width / this.w, uit.height / this.h);
 
-        for (let i = 0; i < level.words.length; i++) {
-            const word: types.InTreeWord = level.words[i];
+        for (let i = 0; i < levelData.words.length; i++) {
+            const word: types.InTreeWord = levelData.words[i];
 
             this.words[word.word] = [];
 
@@ -58,7 +58,11 @@ export class WordsTree extends cc.Component {
                     throw new Error(`Level error: Unknown word align type!`);
                 }
 
-                this.words[word.word][j] = this.createRect(x, y, squareSize, char);
+                let aCharRect = this.createRect(x, y, squareSize, char);
+                aCharRect.backColor = levelData.visualData?.primaryColor;
+                aCharRect.fontColor = levelData.visualData?.fontColor;
+                this.words[word.word][j] = aCharRect
+
             }
         }
 
@@ -107,7 +111,7 @@ export class WordsTree extends cc.Component {
     }
 
     destroyTree(): void {
-        const level = this.level as types.LevelData;
+        const level = this.levelData as types.LevelData;
         const maxIndividualDelay = 1.5;
         const duration = 1;
 
@@ -197,7 +201,7 @@ export class WordsTree extends cc.Component {
             if (!isOpenedAlready) {
                 // не все буквы в слове угаданы, открыть все буквы
                 isWordGuessed = true;
-                let inTreeWord = this.level?.words.find((w: types.InTreeWord) => w.word === word) as types.InTreeWord;
+                let inTreeWord = this.levelData?.words.find((w: types.InTreeWord) => w.word === word) as types.InTreeWord;
 
                 for (let i = 0; i < inTreeWord.word.length; i++) this.openRect(
                     inTreeWord.x + (inTreeWord.align === types.Align.hor ? i : 0),
@@ -222,7 +226,7 @@ export class WordsTree extends cc.Component {
     clear() {
         while (this.node.children.length) this.node.children[0].removeFromParent();
 
-        this.level = undefined;
+        this.levelData = undefined;
         this.words = {};
         this.tree = [];
         this.w = this.h = 0;
