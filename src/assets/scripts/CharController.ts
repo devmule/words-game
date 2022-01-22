@@ -2,7 +2,6 @@ import * as cc from 'cc';
 import {CharButton} from "./CharButton";
 import * as types from "./Types";
 import * as env from "cc/env";
-import {HSLController} from "./HSLController";
 
 const {ccclass, property} = cc._decorator;
 
@@ -164,14 +163,6 @@ export class CharController extends cc.Component {
         for (let i = 0; i < this.selectedButtons.length; i++)
             word += this.selectedButtons[i].char;
         this.hintText.string = word;
-    }
-
-    setHSL(h: number, s: number, l: number) {
-        for (let i = 0; i < this.charButtons.length; i++) {
-            let btnNode = this.charButtons[i].node as cc.Node;
-            let charHSL = btnNode.getChildByName('Circle')?.getComponent(HSLController) as HSLController;
-            charHSL.setHSL(h, s, l);
-        }
     }
 
     shuffleButtons() {

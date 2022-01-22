@@ -2,7 +2,6 @@ import * as cc from 'cc';
 import * as env from "cc/env";
 import * as types from "./Types";
 import {CharRect} from "./CharRect";
-import {HSLController} from "./HSLController";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;
 
@@ -227,17 +226,5 @@ export class WordsTree extends cc.Component {
         this.words = {};
         this.tree = [];
         this.w = this.h = 0;
-    }
-
-    setHSL(h: number, s: number, l: number) {
-        for (let i = 0; i < this.tree.length; i++) {
-            for (let j = 0; j < this.tree[i].length; j++) {
-                if (this.tree[i][j] instanceof CharRect) {
-                    let rectNode = (this.tree[i][j] as unknown as CharRect).node;
-                    const rectHSL = rectNode.getChildByName('Back')?.getComponent(HSLController) as HSLController;
-                    rectHSL.setHSL(h, s, l);
-                }
-            }
-        }
     }
 }

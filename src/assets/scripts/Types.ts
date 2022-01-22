@@ -31,7 +31,7 @@ export enum Align {
 
 /** настройки визуала уровня */
 export type LevelVisual = {
-    hsl?: [number?, number?, number?]
+
 }
 
 /** настройки слова в дереве слов */
