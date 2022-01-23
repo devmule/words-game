@@ -7,6 +7,7 @@ export class CharRect extends cc.Component {
 
     private _text: string = "";
     private _isOpened: boolean = false;
+    private _shaker: cc.Tween<cc.Node> | null = null;
 
     private get textNode(): cc.Node {
         return this.node.getChildByName("Text") as cc.Node;
@@ -49,11 +50,6 @@ export class CharRect extends cc.Component {
     }
 
 
-    start() {
-
-    }
-
-
     public setSize(w: number, h: number) {
         const uit = this.node.getComponent(cc.UITransform) as cc.UITransform;
 
@@ -82,13 +78,26 @@ export class CharRect extends cc.Component {
         if (this._isOpened) return;
         this._isOpened = true;
 
-        const s0 = cc.v3(0, 0, 0);
-        const s1 = cc.v3(1, 1, 1);
-        const easing = 'backInOut';
+        const
+            s0 = cc.v3(0, 0, 0),
+            s1 = cc.v3(1, 1, 1),
+            easing = 'backInOut',
+            time = 0.3,
+            scale1 = cc.v3(1, 1, 1),
+            scale2 = cc.v3(1.2, 1.2, 1.2);
+
         this.textNode.setScale(s0);
         cc.tween(this.textNode)
             .delay(delay)
-            .to(.5, {scale: s1}, {easing})
+            .to(time, {scale: s1}, {easing})
+            .start();
+
+        cc.Tween.stopAllByTarget(this.backSprite.node);
+
+        cc.tween(this.backSprite.node)
+            .delay(delay)
+            .to(time / 2, {scale: scale2})
+            .to(time / 2, {scale: scale1})
             .start();
     }
 
@@ -102,6 +111,48 @@ export class CharRect extends cc.Component {
             .delay(delay)
             .to(.5, {scale: s0}, {easing})
             .start();
+    }
+
+    set shaking(val: boolean) {
+        if (val == this.shaking) return;
+
+        if (val) {
+
+            let a = 20 + Math.random() * 10,
+                rot1 = -a / 2,
+                rot2 = a / 2,
+                min = 0.3,
+                max = 0.5,
+                t = Math.random() * (max - min) + min;
+
+            if (Math.random() > 0.5) [rot1, rot2] = [rot2, rot1];
+
+            this._shaker = cc.tween(this.node)
+                .to(t, {angle: rot2})
+                .to(t, {angle: rot1})
+                .union()
+                .repeatForever()
+                .start();
+
+
+        } else {
+
+            if (!this._shaker) return;
+            this._shaker.stop();
+            this._shaker = null;
+            let min = 0.3,
+                max = 0.5,
+                t = Math.random() * (max - min) + min;
+            cc.tween(this.node)
+                .to(t, {angle: 0})
+                .start();
+
+        }
+
+    }
+
+    get shaking(): boolean {
+        return !!this._shaker;
     }
 
 }

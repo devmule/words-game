@@ -27,6 +27,10 @@ export class CharController extends cc.Component {
         return hintText.getComponent(cc.Label) as cc.Label;
     }
 
+    private get buttonsContainer(): cc.Node {
+        return this.node.getChildByName("ButtonsContainer") as cc.Node;
+    }
+
     @property({type: cc.Prefab})
     public textButtonPrefab: cc.Prefab | undefined;
 
@@ -73,7 +77,7 @@ export class CharController extends cc.Component {
             charBtn.char = letters[i];
 
             this.charButtons.push(charBtn);
-            this.node.addChild(btnNode);
+            this.buttonsContainer.addChild(btnNode);
         }
 
         this.shuffleButtons();
@@ -195,12 +199,10 @@ export class CharController extends cc.Component {
     clear() {
         // удалить все кнопки и обнулить параметры
 
-        for (let i = 0; i < this.node.children.length; i++) {
-            let child = this.node.children[i] as cc.Node;
-            if (child.name === 'CharButton') {
-                child.removeFromParent();
-                i--;
-            }
+        let copy = this.buttonsContainer.children.map(c => c);
+        for (let i = 0; i < copy.length; i++) {
+            let child = copy[i];
+            child.removeFromParent();
         }
 
         this.charButtons.length = 0;

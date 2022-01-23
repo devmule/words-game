@@ -3,6 +3,8 @@ import * as env from "cc/env";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;
 
+const SCREEN_NAME = "screen";
+
 @ccclass('LayersController')
 @executeInEditMode
 export class LayersController extends cc.Component {
@@ -16,7 +18,7 @@ export class LayersController extends cc.Component {
 
     addLayer(content: cc.Node, immediately: boolean = false) {
 
-        const screenNode = new cc.Node('screen');
+        const screenNode = new cc.Node(SCREEN_NAME);
         screenNode.addChild(content);
 
         screenNode.addComponent(cc.UIOpacity);
@@ -26,11 +28,14 @@ export class LayersController extends cc.Component {
 
     closeAll(immediately: boolean = false) {
         let children = this.node.children.map(c => c);
-        for (let i = 0; i < children.length; i++)
-            this.closeLayer(children[i], immediately);
+        for (let i = 0; i < children.length; i++) {
+            let screenNode = children[i];
+            if (screenNode.name != SCREEN_NAME) continue;
+            this.closeLayer(screenNode, immediately);
+        }
     }
 
-    closeLayer(screenNode: cc.Node, immediately: boolean) {
+    private closeLayer(screenNode: cc.Node, immediately: boolean) {
 
         const opacity = screenNode.getComponent(cc.UIOpacity) as cc.UIOpacity;
 
@@ -51,7 +56,7 @@ export class LayersController extends cc.Component {
         }
     }
 
-    openLayer(screenNode: cc.Node, immediately: boolean) {
+    private openLayer(screenNode: cc.Node, immediately: boolean) {
 
         const easing = 'cubicInOut';
         const d = 1;

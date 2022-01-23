@@ -9,6 +9,7 @@ const {ccclass, property, executeInEditMode} = cc._decorator;
 @executeInEditMode
 export class WordsTree extends cc.Component {
 
+    private _isHintOpenDirectlyActive: boolean = false;
     private levelData: LevelData | undefined;
     private tree: (CharRect | null)[][] = [];
     private words: { [id: string]: CharRect[]; } = {};
@@ -63,14 +64,22 @@ export class WordsTree extends cc.Component {
             }
         }
 
+
+        for (let x = 0; x < this.tree.length; x++) {
+            for (let y = 0; y < this.tree[x].length; y++) {
+                let charRect = this.tree[x][y];
+                if (charRect == null) continue;
+                this.node.addChild(charRect.node);
+                this.poseRect(charRect.node, x, y, squareSize);
+            }
+        }
+
     }
 
     createRect(x: number, y: number, squareSize: number, char: string): CharRect {
         if (this.tree[x][y]) return this.tree[x][y] as CharRect;
 
         const rectNode = cc.instantiate(this.rectPrefab) as unknown as cc.Node;
-        this.poseRect(rectNode, x, y, squareSize);
-        this.node.addChild(rectNode);
 
         const rect = rectNode.getComponent(CharRect) as CharRect;
         this.tree[x][y] = rect;
@@ -182,6 +191,22 @@ export class WordsTree extends cc.Component {
 
         // open random word
         this.openWord(unopenedWords[Math.floor(Math.random() * unopenedWords.length)]);
+    }
+
+    set isHintOpenDirectlyActive(val: boolean) {
+
+        this._isHintOpenDirectlyActive = val;
+
+        if (!val) {
+            this.tree.forEach((tt) => tt.forEach((ch) => ch && (ch.shaking = false)));
+        } else {
+            this.tree.forEach((tt) => tt.forEach((ch) => ch && !ch.isOpened && (ch.shaking = true)));
+        }
+
+    }
+
+    get isHintOpenDirectlyActive(): boolean {
+        return this._isHintOpenDirectlyActive;
     }
 
     openWord(word: string): boolean {

@@ -32,9 +32,13 @@ export class CharButton extends cc.Component {
 
     @property({type: cc.CCBoolean})
     public set activated(val: boolean) {
+
         if (this._activated === val) return;
         this._activated = val;
         this.updateActiveColor();
+
+        this.doShake();
+
     }
 
     public get activated(): boolean {
@@ -104,5 +108,20 @@ export class CharButton extends cc.Component {
 
     get char(): string {
         return this._char;
+    }
+
+    public doShake(): void {
+
+        cc.Tween.stopAllByTarget(this.node);
+        let easing: cc.TweenEasing = "linear",
+            scale1 = cc.v3(1, 1, 1),
+            scale2 = cc.v3(1.2, 1.2, 1.2),
+            time = 0.2;
+
+        cc.tween(this.node)
+            .to(time / 2, {scale: scale2}, {easing})
+            .to(time / 2, {scale: scale1}, {easing})
+            .start();
+
     }
 }

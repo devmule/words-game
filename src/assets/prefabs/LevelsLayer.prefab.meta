@@ -2,12 +2,12 @@
   "ver": "1.1.27",
   "importer": "prefab",
   "imported": true,
-  "uuid": "89f105d7-0fb5-4444-b1da-7ecc4da796ec",
+  "uuid": "0142922b-b952-4ce3-9679-43e5db560b74",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "MenuLayer"
+    "syncNodeName": "LevelsLayer"
   }
 }

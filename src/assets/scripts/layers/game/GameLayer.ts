@@ -11,7 +11,6 @@ const {ccclass, property, executeInEditMode} = cc._decorator;
 export class GameLayer extends LayerBase {
 
     private levelData: LevelData | undefined;
-    private isHintOpenDirectlyActive = false;
     private isWon = false;
 
     private get charController(): CharController {
@@ -50,8 +49,8 @@ export class GameLayer extends LayerBase {
     onHintOpenInTree() {
         if (this.isWon) return;
 
-        if (!this.isHintOpenDirectlyActive) {
-            this.isHintOpenDirectlyActive = true;
+        if (!this.wordsTree.isHintOpenDirectlyActive) {
+            this.wordsTree.isHintOpenDirectlyActive = true;
         }
     }
 
@@ -76,10 +75,10 @@ export class GameLayer extends LayerBase {
     onTreeRectClicked(x: number, y: number) {
         if (this.isWon) return;
 
-        if (this.isHintOpenDirectlyActive) {
+        if (this.wordsTree.isHintOpenDirectlyActive) {
             let wasOpened = this.wordsTree.openRect(x, y);
             if (wasOpened) {
-                this.isHintOpenDirectlyActive = false;
+                this.wordsTree.isHintOpenDirectlyActive = false;
                 if (this.wordsTree.isWin) this.onWin();
             }
         }
@@ -88,7 +87,7 @@ export class GameLayer extends LayerBase {
     onLayerClicked(e: cc.Event) {
         if (this.isWon) return;
 
-        if (this.isHintOpenDirectlyActive) {
+        if (this.wordsTree.isHintOpenDirectlyActive) {
 
             let isCharClicked = false;
             for (let target = e.target as cc.Node | null; target != null; target = target.parent)
@@ -98,7 +97,7 @@ export class GameLayer extends LayerBase {
                 }
 
             if (!isCharClicked) {
-                this.isHintOpenDirectlyActive = false;
+                this.wordsTree.isHintOpenDirectlyActive = false;
             }
         }
     }
