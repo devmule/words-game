@@ -1,18 +1,8 @@
-type GameConfigColorType = {
-    dark: string
-    light: string
-}
-
 type GameHintConfigType = {
     price: number
 }
 
 type GameConfigType = {
-    visual: {
-        color_primary: GameConfigColorType
-        color_secondary: GameConfigColorType
-        color_highlight: GameConfigColorType
-    },
     logic: {
         hint: {
             shuffle: GameHintConfigType,

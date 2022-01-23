@@ -1,19 +1,5 @@
 {
   "game": {
-    "visual": {
-      "color_primary": {
-        "dark": "#00851f",
-        "light": "#04d635"
-      },
-      "color_secondary": {
-        "dark": "#b37338",
-        "light": "#fbfaf2"
-      },
-      "color_highlight": {
-        "dark": "#e98300",
-        "light": "#fff196"
-      }
-    },
     "logic": {
       "hint": {
         "shuffle": {
