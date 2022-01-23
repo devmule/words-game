@@ -70,7 +70,11 @@ export class Root extends cc.Component {
         this.user.incrementLevelIndex();
         let level = tempLevels[this.user.getLevelIndex()];
 
-        this.openLevel(level);
+        if (!level) {
+            this.openMenu();
+        } else {
+            this.openLevel(level);
+        }
 
     }
 

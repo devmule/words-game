@@ -14,8 +14,13 @@ export class CharButton extends cc.Component {
         return textNode.getComponent(cc.Label) as cc.Label;
     }
 
-    private get circleSprite(): cc.Sprite {
-        let textNode = this.node.getChildByName("Circle") as cc.Node;
+    private get textOutlineComponent(): cc.LabelOutline {
+        let textNode = this.node.getChildByName("Text") as cc.Node;
+        return textNode.getComponent(cc.LabelOutline) as cc.LabelOutline;
+    }
+
+    private get backgroundSpriteComponent(): cc.Sprite {
+        let textNode = this.node.getChildByName("Background") as cc.Node;
         return textNode.getComponent(cc.Sprite) as cc.Sprite;
     }
 
@@ -71,17 +76,17 @@ export class CharButton extends cc.Component {
 
     @property({type: cc.Color})
     public set fontColor(color: cc.Color | ColorRGBARaw | undefined) {
-        if (color instanceof cc.Color) this.textComponent.color = color;
-        else if (color != null) this.textComponent.color.set(...color);
+        if (color instanceof cc.Color) this.textOutlineComponent.color = color;
+        else if (color != null) this.textOutlineComponent.color.set(...color);
     }
 
     public get fontColor(): cc.Color {
-        return this.textComponent?.color ?? new cc.Color();
+        return this.textOutlineComponent?.color ?? new cc.Color();
     }
 
 
     private updateActiveColor() {
-        this.circleSprite.color = this._activated ? this._activeColor : this._inactiveColor;
+        this.backgroundSpriteComponent.color = this._activated ? this._activeColor : this._inactiveColor;
     }
 
 
