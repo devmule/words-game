@@ -1,36 +1,24 @@
+import {getRoot} from "./Utils";
+
 export type UserData = {
 
     levelIndex: number
-
     money: number
 
-    hintOpenCharRand: number
-    hintOpenWordRand: number
-    hintOpenDirectly: number
-
 }
+
 
 export class User {
 
     private _levelIndex: number = 0;
-
     private _money: number = 0;
-
-    private _hintOpenCharRand: number = 0;
-    private _hintOpenWordRand: number = 0;
-    private _hintOpenDirectly: number = 0;
 
     // ===========================================================================
 
     public init(userdata: UserData) {
 
         this._levelIndex = userdata.levelIndex;
-
         this._money = userdata.money;
-
-        this._hintOpenCharRand = userdata.hintOpenCharRand;
-        this._hintOpenWordRand = userdata.hintOpenWordRand;
-        this._hintOpenDirectly = userdata.hintOpenDirectly;
 
     }
 
@@ -39,15 +27,14 @@ export class User {
         return {
 
             levelIndex: this._levelIndex,
-
             money: this._money,
-
-            hintOpenCharRand: this._hintOpenCharRand,
-            hintOpenWordRand: this._hintOpenWordRand,
-            hintOpenDirectly: this._hintOpenDirectly,
 
         };
 
+    }
+
+    public get money(): number {
+        return this._money;
     }
 
     // ===========================================================================
@@ -62,21 +49,17 @@ export class User {
 
     // ===========================================================================
 
-    public get hintOpenCharRandCount(): number {
-        return this._hintOpenCharRand;
+    public getHintOpenCharRandPrice(): number {
+        return getRoot().config.game.logic.hint.open_char_rand.price;
     }
 
     public canUseHintOpenCharRand(): boolean {
-        return this._hintOpenCharRand > 0 || this._money > 0;
+        return this._money >= this.getHintOpenCharRandPrice();
     }
 
     public useHintOpenCharRand(): boolean {
-        if (this._hintOpenCharRand > 0) {
-            this._hintOpenCharRand--
-            return true;
-        }
-        if (this._money > 0) {
-            this._money--
+        if (this.canUseHintOpenCharRand()) {
+            this._money -= this.getHintOpenCharRandPrice();
             return true;
         }
         return false
@@ -84,21 +67,17 @@ export class User {
 
     // ===========================================================================
 
-    public get hintOpenWordRandCount(): number {
-        return this._hintOpenWordRand;
+    public getHintOpenWordRandPrice(): number {
+        return getRoot().config.game.logic.hint.open_word_rand.price;
     }
 
     public canUseHintOpenWordRand(): boolean {
-        return this._hintOpenWordRand > 0 || this._money > 0;
+        return this._money >= this.getHintOpenWordRandPrice();
     }
 
     public useHintOpenWordRand(): boolean {
-        if (this._hintOpenWordRand > 0) {
-            this._hintOpenWordRand--
-            return true;
-        }
-        if (this._money > 0) {
-            this._money--
+        if (this.canUseHintOpenWordRand()) {
+            this._money -= this.getHintOpenWordRandPrice()
             return true;
         }
         return false
@@ -106,21 +85,35 @@ export class User {
 
     // ===========================================================================
 
-    public get hintOpenDirectlyCount(): number {
-        return this._hintOpenDirectly;
+    public getHintOpenDirectlyPrice(): number {
+        return getRoot().config.game.logic.hint.open_directly.price;
     }
 
     public canUseHintOpenDirectly(): boolean {
-        return this._hintOpenDirectly > 0 || this._money > 0;
+        return this._money >= this.getHintOpenDirectlyPrice();
     }
 
     public useHintOpenDirectly(): boolean {
-        if (this._hintOpenDirectly > 0) {
-            this._hintOpenDirectly--
+        if (this.canUseHintOpenDirectly()) {
+            this._money -= this.getHintOpenDirectlyPrice();
             return true;
         }
-        if (this._money > 0) {
-            this._money--
+        return false
+    }
+
+    // ===========================================================================
+
+    public getHintShufflePrice(): number {
+        return getRoot().config.game.logic.hint.shuffle.price;
+    }
+
+    public canUseHintShuffle(): boolean {
+        return this._money >= this.getHintShufflePrice();
+    }
+
+    public useHintShuffle(): boolean {
+        if (this.canUseHintShuffle()) {
+            this._money -= this.getHintShufflePrice();
             return true;
         }
         return false

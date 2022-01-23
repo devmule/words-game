@@ -1,5 +1,4 @@
 import * as cc from 'cc';
-import {ColorRGBARaw} from "../../Types";
 
 const {ccclass, property} = cc._decorator;
 
@@ -29,9 +28,9 @@ export class CharRect extends cc.Component {
 
 
     @property({type: cc.Color})
-    public set backColor(color: cc.Color | ColorRGBARaw | undefined) {
+    public set backColor(color: cc.Color | string | undefined) {
         if (color instanceof cc.Color) this.backSprite.color = color;
-        else if (color != null) this.backSprite.color.set(...color);
+        else if (color != null) this.backSprite.color.fromHEX(color);
     }
 
     public get backColor(): cc.Color {
@@ -40,13 +39,18 @@ export class CharRect extends cc.Component {
 
 
     @property({type: cc.Color})
-    public set fontColor(color: cc.Color | ColorRGBARaw | undefined) {
+    public set fontColor(color: cc.Color | undefined) {
         if (color instanceof cc.Color) this.textOutlineComponent.color = color;
-        else if (color != null) this.textOutlineComponent.color.set(...color);
+        else if (color != null) this.textOutlineComponent.color.fromHEX(color);
     }
 
     public get fontColor(): cc.Color {
         return this.textOutlineComponent?.color ?? new cc.Color();
+    }
+
+
+    start() {
+
     }
 
 

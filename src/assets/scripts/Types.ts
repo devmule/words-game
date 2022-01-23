@@ -28,16 +28,6 @@ export enum Align {
     ver = 'ver'
 }
 
-/** настройки визуала уровня */
-export type ColorRGBARaw = [number, number, number, number?];
-
-/** настройки визуала уровня */
-export type LevelVisualData = {
-    primaryColor?: ColorRGBARaw,
-    secondaryColor?: ColorRGBARaw,
-    fontColor?: ColorRGBARaw,
-}
-
 /** настройки слова в дереве слов */
 export type InTreeWord = {
     align: keyof typeof Align
@@ -47,13 +37,12 @@ export type InTreeWord = {
 }
 
 export type LevelData = {
+
     letters: string
     words: InTreeWord[]
 
     extraWords: string[];
 
-    // необязательные, в случае если не задано - генерируется случайно или ставится по дефолту
-    visualData?: LevelVisualData
 }
 
 
@@ -71,12 +60,7 @@ export const tempLevels: LevelData[] = [
             {"align": "hor", "x": 3, "y": 6, "word": "крест"},
             {"align": "ver", "x": 9, "y": 2, "word": "аскет"}
         ],
-        extraWords: [],
-        visualData: {
-            primaryColor: [28, 199, 28],
-            secondaryColor: [199, 28, 199],
-            fontColor: [255, 0, 0]
-        }
+        extraWords: []
     },
     {
         "letters": "авостл",

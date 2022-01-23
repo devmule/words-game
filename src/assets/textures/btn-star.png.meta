@@ -2,7 +2,7 @@
   "ver": "1.0.21",
   "importer": "image",
   "imported": true,
-  "uuid": "5875c0c9-845a-4483-997c-4724de9bc7d2",
+  "uuid": "74dc3879-2de3-471a-9503-a2cfbfa052e4",
   "files": [
     ".png",
     ".json"
@@ -10,8 +10,8 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "5875c0c9-845a-4483-997c-4724de9bc7d2@6c48a",
-      "displayName": "плюс",
+      "uuid": "74dc3879-2de3-471a-9503-a2cfbfa052e4@6c48a",
+      "displayName": "btn-star",
       "id": "6c48a",
       "name": "texture",
       "userData": {
@@ -22,7 +22,7 @@
         "mipfilter": "none",
         "anisotropy": 0,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "5875c0c9-845a-4483-997c-4724de9bc7d2"
+        "imageUuidOrDatabaseUri": "74dc3879-2de3-471a-9503-a2cfbfa052e4"
       },
       "ver": "1.0.21",
       "imported": true,
@@ -33,8 +33,8 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "5875c0c9-845a-4483-997c-4724de9bc7d2@f9941",
-      "displayName": "плюс",
+      "uuid": "74dc3879-2de3-471a-9503-a2cfbfa052e4@f9941",
+      "displayName": "btn-star",
       "id": "f9941",
       "name": "spriteFrame",
       "userData": {
@@ -45,17 +45,17 @@
         "offsetY": 0,
         "trimX": 0,
         "trimY": 0,
-        "width": 103,
-        "height": 103,
-        "rawWidth": 103,
-        "rawHeight": 103,
+        "width": 172,
+        "height": 178,
+        "rawWidth": 172,
+        "rawHeight": 178,
         "borderTop": 0,
         "borderBottom": 0,
         "borderLeft": 0,
         "borderRight": 0,
         "packable": true,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "5875c0c9-845a-4483-997c-4724de9bc7d2@6c48a",
+        "imageUuidOrDatabaseUri": "74dc3879-2de3-471a-9503-a2cfbfa052e4@6c48a",
         "atlasUuid": ""
       },
       "ver": "1.0.9",
@@ -69,6 +69,6 @@
   "userData": {
     "hasAlpha": true,
     "type": "sprite-frame",
-    "redirect": "5875c0c9-845a-4483-997c-4724de9bc7d2@f9941"
+    "redirect": "74dc3879-2de3-471a-9503-a2cfbfa052e4@f9941"
   }
 }

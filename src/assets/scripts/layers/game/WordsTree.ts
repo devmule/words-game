@@ -58,10 +58,7 @@ export class WordsTree extends cc.Component {
                     throw new Error(`Level error: Unknown word align type!`);
                 }
 
-                let aCharRect = this.createRect(x, y, squareSize, char);
-                aCharRect.backColor = levelData.visualData?.primaryColor;
-                aCharRect.fontColor = levelData.visualData?.fontColor;
-                this.words[word.word][j] = aCharRect
+                this.words[word.word][j] = this.createRect(x, y, squareSize, char)
 
             }
         }

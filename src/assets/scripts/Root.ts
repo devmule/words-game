@@ -3,12 +3,16 @@ import {LayersController} from "./LayersController";
 import {tempLevels, WGEvent, LevelData} from "./Types";
 import {GameLayer} from "./layers/game/GameLayer";
 import {User} from "./User";
+import {ConfigType} from "./configType";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;
 
 @ccclass('Root')
 @executeInEditMode
 export class Root extends cc.Component {
+
+    @property({type: cc.JsonAsset})
+    private configAsset: cc.JsonAsset | undefined;
 
     @property({type: cc.Prefab})
     public layerMenuPrefab: cc.Prefab | undefined;
@@ -19,18 +23,15 @@ export class Root extends cc.Component {
     private screenController: LayersController | undefined;
     private user: User = new User();
 
+    public get config(): ConfigType {
+        return this.configAsset?.json as ConfigType;
+    }
+
     start() {
 
         this.user.init({
-
             levelIndex: 0,
-
-            money: 9999,
-
-            hintOpenCharRand: 10,
-            hintOpenWordRand: 10,
-            hintOpenDirectly: 10,
-
+            money: 10000,
         });
 
         this.screenController = this.node.getComponent(LayersController) as LayersController;

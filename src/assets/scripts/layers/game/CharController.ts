@@ -71,9 +71,6 @@ export class CharController extends cc.Component {
             let charBtn = btnNode.getComponent(CharButton) as CharButton;
             charBtn.activated = false;
             charBtn.char = letters[i];
-            charBtn.activeColor = levelData.visualData?.primaryColor;
-            charBtn.inactiveColor = levelData.visualData?.secondaryColor;
-            charBtn.fontColor = levelData.visualData?.fontColor;
 
             this.charButtons.push(charBtn);
             this.node.addChild(btnNode);

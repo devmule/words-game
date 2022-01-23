@@ -2,8 +2,6 @@ import * as cc from 'cc';
 
 const {ccclass, property} = cc._decorator;
 
-import {ColorRGBARaw} from "../../Types";
-
 @ccclass('CharButton')
 export class CharButton extends cc.Component {
 
@@ -48,9 +46,9 @@ export class CharButton extends cc.Component {
     private _activeColor: cc.Color = new cc.Color();
 
     @property({type: cc.Color})
-    public set activeColor(color: cc.Color | ColorRGBARaw | undefined) {
+    public set activeColor(color: cc.Color | string | undefined) {
         if (color instanceof cc.Color) this._activeColor = color;
-        else if (color != null) this._activeColor.set(...color);
+        else if (color != null) this._activeColor.fromHEX(color);
         this.updateActiveColor();
     }
 
@@ -63,9 +61,9 @@ export class CharButton extends cc.Component {
     private _inactiveColor: cc.Color = new cc.Color();
 
     @property({type: cc.Color})
-    public set inactiveColor(color: cc.Color | ColorRGBARaw | undefined) {
+    public set inactiveColor(color: cc.Color | string | undefined) {
         if (color instanceof cc.Color) this._inactiveColor = color;
-        else if (color != null) this._inactiveColor.set(...color);
+        else if (color != null) this._inactiveColor.fromHEX(color);
         this.updateActiveColor();
     }
 
@@ -75,9 +73,9 @@ export class CharButton extends cc.Component {
 
 
     @property({type: cc.Color})
-    public set fontColor(color: cc.Color | ColorRGBARaw | undefined) {
+    public set fontColor(color: cc.Color | string | undefined) {
         if (color instanceof cc.Color) this.textOutlineComponent.color = color;
-        else if (color != null) this.textOutlineComponent.color.set(...color);
+        else if (color != null) this.textOutlineComponent.color.fromHEX(color);
     }
 
     public get fontColor(): cc.Color {
