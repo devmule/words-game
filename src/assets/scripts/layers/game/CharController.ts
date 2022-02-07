@@ -11,6 +11,7 @@ const v2: cc.Vec2 = new cc.Vec2();
 @ccclass('CharController')
 export class CharController extends cc.Component {
 
+    private letters: string = "";
     private charButtons: CharButton[] = [];
     private selectedButtons: CharButton[] = [];
     private graphics: cc.Graphics = new cc.Graphics();
@@ -25,20 +26,35 @@ export class CharController extends cc.Component {
 
     start() {
 
-        let lineDrawNode = this.node.getChildByName("LineDraw") as cc.Node;
-        this.graphics = lineDrawNode.getComponent(cc.Graphics) as cc.Graphics;
-        if (!this.graphics) throw new Error(`graphics is not implemented`);
+        let lineDrawNode = this.node.getChildByName("LineDraw");
+        this.graphics = lineDrawNode?.getComponent(cc.Graphics) as cc.Graphics;
+        if (!this.graphics) throw new Error(`LineDraw.Graphics is not implemented`);
 
         let hintText = this.node.getChildByName("HintText") as cc.Node;
         this.hintText = hintText.getComponent(cc.Label) as cc.Label;
-        if (!this.graphics) throw new Error(`hintText is not implemented`);
+        if (!this.hintText) throw new Error(`HintText is not implemented`);
 
         this.buttonsContainer = this.node.getChildByName("ButtonsContainer") as cc.Node;
-        if (!this.graphics) throw new Error(`buttonsContainer is not implemented`);
+        if (!this.buttonsContainer) throw new Error(`ButtonsContainer is not implemented`);
 
         this.node.on(cc.Node.EventType.TOUCH_CANCEL, this.touchEnd, this);
         this.node.on(cc.Node.EventType.TOUCH_END, this.touchEnd, this);
         this.node.on(cc.Node.EventType.TOUCH_MOVE, this.touchMove, this);
+
+
+        const pref = this.textButtonPrefab as unknown as cc.Prefab;
+        for (let i = 0; i < this.letters.length; i++) {
+            let btnNode = cc.instantiate(pref) as cc.Node;
+
+            let charBtn = btnNode.getComponent(CharButton) as CharButton;
+            charBtn.activated = false;
+            charBtn.char = this.letters[i];
+
+            this.charButtons.push(charBtn);
+            this.buttonsContainer.addChild(btnNode);
+        }
+
+        this.shuffleButtons();
 
     }
 
@@ -51,25 +67,7 @@ export class CharController extends cc.Component {
     }
 
     initLetters(letters: string) {
-
-        this.clear();
-
-        const pref = this.textButtonPrefab as unknown as cc.Prefab;
-
-        for (let i = 0; i < letters.length; i++) {
-
-            let btnNode = cc.instantiate(pref) as cc.Node;
-
-            let charBtn = btnNode.getComponent(CharButton) as CharButton;
-            charBtn.activated = false;
-            charBtn.char = letters[i];
-
-            this.charButtons.push(charBtn);
-            this.buttonsContainer.addChild(btnNode);
-        }
-
-        this.shuffleButtons();
-
+        this.letters = letters;
     }
 
     touchEnd(e: cc.EventTouch) {

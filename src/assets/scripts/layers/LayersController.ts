@@ -20,16 +20,16 @@ class LayerDescriptor {
 export class LayersController extends cc.Component {
 
     @property({visible: false, serializable: true})
-    private _initialLayer: string = "";
+    private _currentLayer: string = "";
 
     @property
     public get currentLayer(): string {
-        return this._initialLayer;
+        return this._currentLayer;
     }
 
     public set currentLayer(val) {
-        this._initialLayer = val;
-        this.openLayer(val, false);
+        this._currentLayer = val;
+        this.openLayerByName(val, false);
     }
 
     @property({type: LayerDescriptor})
@@ -37,10 +37,10 @@ export class LayersController extends cc.Component {
 
 
     start() {
-        this.openLayer(this._initialLayer, true);
+        this.openLayerByName(this._currentLayer, true);
     }
 
-    public openLayer(layerName: string, immediately = false) {
+    public openLayerByName(layerName: string, immediately = false) {
 
         this._closeAll(immediately);
         let layerDescriptor = this.layers.find((ld) => ld.name == layerName);
@@ -64,9 +64,9 @@ export class LayersController extends cc.Component {
                 return;
             }
 
-            let uiOpacity = layer.getComponent(cc.UIOpacity) as cc.UIOpacity;
+            const uiOpacity = layer.getComponent(cc.UIOpacity) as cc.UIOpacity;
 
-            cc.tween(layer.layer)
+            cc.tween(layer)
                 .to(duration, {position: cc.v3(0, -1000, 0), scale: cc.v3(0.25, 0.25, 0.25)}, {easing})
                 .call(() => layer.destroy())
                 .start();
@@ -98,7 +98,7 @@ export class LayersController extends cc.Component {
         layer.setPosition(0, 1000, 0);
         layer.setScale(0.25, 0.25);
 
-        cc.tween(layer.layer)
+        cc.tween(layer)
             .to(duration, {position: cc.v3(0, 0, 0), scale: cc.v3(1, 1, 1)}, {easing})
             .start();
         cc.tween(uiOpacity)

@@ -9,9 +9,9 @@ import {User} from "../../User";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;
 
-@ccclass('GameLayer')
+@ccclass('Game')
 @executeInEditMode
-export class GameLayer extends cc.Component {
+export class Game extends cc.Component {
 
     private levelData: LevelData | undefined;
     private isWon = false;
@@ -36,17 +36,16 @@ export class GameLayer extends cc.Component {
         this.charController.node.on(WGEvent.HINT_OPEN_WORD, this.onHintOpenWord, this);
         this.wordsTree.node.on(WGEvent.RECT_CLICKED, this.onTreeRectClicked, this);
 
+        const levels = findComponent(Levels);
+        if (!levels) throw new Error(`levels not implemented`);
 
         const user = findComponent(User);
-        if (!user) throw new Error(`user is not implemented`);
+        if (!user) throw new Error(`user not implemented`);
 
-        const levels = findComponent(Levels);
+        const level = levels.getLevelByIndex(user.levelIndex);
+        if (!level) throw new Error(`no such level`);
 
-        if (!levels) throw new Error(`levels is not implemented`);
-
-        console.log(levels, user, levels.levels[user.levelIndex])
-
-        this.initLevel(levels.levels[user.levelIndex]);
+        this.initLevel(level);
 
     }
 
