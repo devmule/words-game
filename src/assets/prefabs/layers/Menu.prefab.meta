@@ -2,12 +2,12 @@
   "ver": "1.1.27",
   "importer": "prefab",
   "imported": true,
-  "uuid": "43f25ef6-1efb-4e13-9e77-393f459a7e4d",
+  "uuid": "39867c24-cbce-41dc-8e68-151106bc9980",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "HintOpenRandom"
+    "syncNodeName": "Menu"
   }
 }

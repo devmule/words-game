@@ -1,26 +1,62 @@
 import * as cc from 'cc';
-import {LevelData, WGEvent} from "../../Types";
+import {WGEvent} from "../../WGEvent";
+import {LevelData} from "../../Core/LevelTypes";
 import {WordsTree} from "./WordsTree";
 import {CharController} from "./CharController";
-import {LayerBase} from "../LayerBase";
+import {findComponent} from "../../Core/Utils";
+import {Levels} from "../../Core/Levels";
+import {User} from "../../User";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;
 
 @ccclass('GameLayer')
 @executeInEditMode
-export class GameLayer extends LayerBase {
+export class GameLayer extends cc.Component {
 
     private levelData: LevelData | undefined;
     private isWon = false;
+    private charController: CharController = new CharController();
+    private wordsTree: WordsTree = new WordsTree();
 
-    private get charController(): CharController {
-        let charControllerNode = this.layerRoot.getChildByName('CharController') as cc.Node;
-        return charControllerNode.getComponent(CharController) as CharController;
+    start() {
+
+        let charControllerNode = this.node.getChildByName('CharController') as cc.Node;
+        this.charController = charControllerNode.getComponent(CharController) as CharController;
+        if (!this.charController) throw new Error(`charController is not implemented`);
+
+        let wordsTreeNode = this.node.getChildByName('WordsTree') as cc.Node;
+        this.wordsTree = wordsTreeNode.getComponent(WordsTree) as WordsTree;
+        if (!this.wordsTree) throw new Error(`wordsTree is not implemented`);
+
+        this.node.on(cc.Node.EventType.TOUCH_START, this.onLayerClicked, this);
+        this.charController.node.on(WGEvent.WORD_CREATED, this.onWordCreated, this);
+        this.charController.node.on(WGEvent.HINT_SHUFFLE, this.onHintShuffle, this);
+        this.charController.node.on(WGEvent.HINT_OP_CHAR_RAND, this.onHintOpenCharRand, this);
+        this.charController.node.on(WGEvent.HINT_OP_IN_TREE, this.onHintOpenInTree, this);
+        this.charController.node.on(WGEvent.HINT_OPEN_WORD, this.onHintOpenWord, this);
+        this.wordsTree.node.on(WGEvent.RECT_CLICKED, this.onTreeRectClicked, this);
+
+
+        const user = findComponent(User);
+        if (!user) throw new Error(`user is not implemented`);
+
+        const levels = findComponent(Levels);
+
+        if (!levels) throw new Error(`levels is not implemented`);
+
+        console.log(levels, user, levels.levels[user.levelIndex])
+
+        this.initLevel(levels.levels[user.levelIndex]);
+
     }
 
-    private get wordsTree(): WordsTree {
-        let wordsTreeNode = this.layerRoot.getChildByName('WordsTree') as cc.Node;
-        return wordsTreeNode.getComponent(WordsTree) as WordsTree;
+    initLevel(level: LevelData): void {
+
+        this.isWon = false;
+        this.levelData = level;
+        this.wordsTree.initLevel(level);
+        this.charController.initLetters(level.letters);
+
     }
 
     onWordCreated(word: string): void {
@@ -100,30 +136,6 @@ export class GameLayer extends LayerBase {
                 this.wordsTree.isHintOpenDirectlyActive = false;
             }
         }
-    }
-
-    initLevel(level: LevelData): void {
-
-        if (!this.node.hasEventListener(cc.Node.EventType.TOUCH_START))
-            this.node.on(cc.Node.EventType.TOUCH_START, this.onLayerClicked, this);
-        if (!this.charController.node.hasEventListener(WGEvent.WORD_CREATED))
-            this.charController.node.on(WGEvent.WORD_CREATED, this.onWordCreated, this);
-        if (!this.charController.node.hasEventListener(WGEvent.HINT_SHUFFLE))
-            this.charController.node.on(WGEvent.HINT_SHUFFLE, this.onHintShuffle, this);
-        if (!this.charController.node.hasEventListener(WGEvent.HINT_OP_CHAR_RAND))
-            this.charController.node.on(WGEvent.HINT_OP_CHAR_RAND, this.onHintOpenCharRand, this);
-        if (!this.charController.node.hasEventListener(WGEvent.HINT_OP_IN_TREE))
-            this.charController.node.on(WGEvent.HINT_OP_IN_TREE, this.onHintOpenInTree, this);
-        if (!this.charController.node.hasEventListener(WGEvent.HINT_OPEN_WORD))
-            this.charController.node.on(WGEvent.HINT_OPEN_WORD, this.onHintOpenWord, this);
-        if (!this.wordsTree.node.hasEventListener(WGEvent.RECT_CLICKED))
-            this.wordsTree.node.on(WGEvent.RECT_CLICKED, this.onTreeRectClicked, this);
-
-        this.isWon = false;
-        this.levelData = level;
-        this.wordsTree.initLevel(level);
-        this.charController.initLevel(level);
-
     }
 
     clear() {

@@ -3,81 +3,108 @@ import * as env from "cc/env";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;
 
-const SCREEN_NAME = "screen";
+@ccclass('LayerDescriptor')
+class LayerDescriptor {
+
+    @property
+    public name: string = '';
+
+    @property({type: cc.Prefab})
+    public layer: cc.Prefab = new cc.Prefab();
+
+}
+
 
 @ccclass('LayersController')
 @executeInEditMode
 export class LayersController extends cc.Component {
 
-    // screens
-    closeTop(immediately: boolean = false): cc.Node | undefined {
-        let screenNode = this.node.children[this.node.children.length - 1] as cc.Node | undefined;
-        if (screenNode) this.closeLayer(screenNode, immediately);
-        return screenNode;
+    @property({visible: false, serializable: true})
+    private _initialLayer: string = "";
+
+    @property
+    public get currentLayer(): string {
+        return this._initialLayer;
     }
 
-    addLayer(content: cc.Node, immediately: boolean = false) {
-
-        const screenNode = new cc.Node(SCREEN_NAME);
-        screenNode.addChild(content);
-
-        screenNode.addComponent(cc.UIOpacity);
-
-        this.openLayer(screenNode, immediately);
+    public set currentLayer(val) {
+        this._initialLayer = val;
+        this.openLayer(val, false);
     }
 
-    closeAll(immediately: boolean = false) {
-        let children = this.node.children.map(c => c);
-        for (let i = 0; i < children.length; i++) {
-            let screenNode = children[i];
-            if (screenNode.name != SCREEN_NAME) continue;
-            this.closeLayer(screenNode, immediately);
-        }
+    @property({type: LayerDescriptor})
+    private layers: LayerDescriptor[] = [];
+
+
+    start() {
+        this.openLayer(this._initialLayer, true);
     }
 
-    private closeLayer(screenNode: cc.Node, immediately: boolean) {
+    public openLayer(layerName: string, immediately = false) {
 
-        const opacity = screenNode.getComponent(cc.UIOpacity) as cc.UIOpacity;
+        this._closeAll(immediately);
+        let layerDescriptor = this.layers.find((ld) => ld.name == layerName);
+        if (!layerDescriptor) return;
 
-        if (immediately || env.EDITOR) {
-            screenNode.removeFromParent();
+        this._openLayer(layerDescriptor, immediately);
 
-        } else {
-            const easing = 'cubicInOut';
-            const d = 1;
-
-            cc.tween(screenNode)
-                .to(d, {position: cc.v3(0, -1000, 0), scale: cc.v3(0.25, 0.25, 0.25)}, {easing})
-                .call(() => screenNode.removeFromParent())
-                .start();
-            cc.tween(opacity)
-                .to(d, {opacity: 0}, {easing})
-                .start();
-        }
     }
 
-    private openLayer(screenNode: cc.Node, immediately: boolean) {
+    private _closeAll(immediately = false) {
+
+        let layers = [...this.node.children];
 
         const easing = 'cubicInOut';
-        const d = 1;
-        const opacity = screenNode.getComponent(cc.UIOpacity) as cc.UIOpacity;
+        const duration = 1;
 
-        this.node.addChild(screenNode);
+        layers.forEach((layer) => {
 
-        if (!immediately && !env.EDITOR) {
-            screenNode.setPosition(0, 1000, 0);
-            screenNode.setScale(0.25, 0.25, 0.25);
-            opacity.opacity = 0;
+            if (immediately || env.EDITOR) {
+                layer.destroy();
+                return;
+            }
 
-            cc.tween(screenNode)
-                .to(d, {position: cc.v3(0, 0, 0), scale: cc.v3(1, 1, 1)}, {easing})
-                .call(() => null)
+            let uiOpacity = layer.getComponent(cc.UIOpacity) as cc.UIOpacity;
+
+            cc.tween(layer.layer)
+                .to(duration, {position: cc.v3(0, -1000, 0), scale: cc.v3(0.25, 0.25, 0.25)}, {easing})
+                .call(() => layer.destroy())
                 .start();
-            cc.tween(opacity)
-                .to(d, {opacity: 255}, {easing})
+            cc.tween(uiOpacity)
+                .to(duration, {opacity: 0}, {easing})
                 .start();
-        }
 
+        });
 
     }
+
+    private _openLayer(layerDescriptor: LayerDescriptor, immediately = false) {
+
+        let layer = cc.instantiate(layerDescriptor.layer);
+        layer.parent = this.node;
+        layer.name = layerDescriptor.name;
+
+        const uiOpacity = layer.getComponent(cc.UIOpacity) as cc.UIOpacity;
+        const easing = 'cubicInOut';
+        const duration = 1;
+
+        if (immediately || env.EDITOR) {
+            uiOpacity.opacity = 255;
+            layer.setPosition(0, 0, 0);
+            layer.setScale(1, 1);
+            return;
+        }
+
+        layer.setPosition(0, 1000, 0);
+        layer.setScale(0.25, 0.25);
+
+        cc.tween(layer.layer)
+            .to(duration, {position: cc.v3(0, 0, 0), scale: cc.v3(1, 1, 1)}, {easing})
+            .start();
+        cc.tween(uiOpacity)
+            .to(duration, {opacity: 255}, {easing})
+            .start();
+
+    }
+
 }

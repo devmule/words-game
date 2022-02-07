@@ -1,6 +1,7 @@
 import * as cc from 'cc';
 import * as env from "cc/env";
-import {Align, InTreeWord, LevelData, WGEvent} from "../../Types";
+import {WGEvent} from "../../WGEvent";
+import {LevelData, Align, InTreeWord} from "../../Core/LevelTypes";
 import {CharRect} from "./CharRect";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;
@@ -25,9 +26,9 @@ export class WordsTree extends cc.Component {
         this.levelData = levelData;
 
         for (let i = 0; i < levelData.words.length; i++) {
-            let word = levelData.words[i] as InTreeWord;
-            this.w = Math.max(this.w, word.x + (word.align === Align.hor ? word.word.length : 1));
-            this.h = Math.max(this.h, word.y + (word.align === Align.ver ? word.word.length : 1));
+            let inTreeWord = levelData.words[i];
+            this.w = Math.max(this.w, inTreeWord.x + (inTreeWord.align === Align.hor ? inTreeWord.word.length : 1));
+            this.h = Math.max(this.h, inTreeWord.y + (inTreeWord.align === Align.ver ? inTreeWord.word.length : 1));
         }
 
         for (let x = 0; x < this.w; x++) {
@@ -117,7 +118,7 @@ export class WordsTree extends cc.Component {
     }
 
     destroyTree(): void {
-        const level = this.levelData as LevelData;
+
         const maxIndividualDelay = 1.5;
         const duration = 1;
 

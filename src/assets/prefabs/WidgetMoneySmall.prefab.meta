@@ -2,12 +2,12 @@
   "ver": "1.1.27",
   "importer": "prefab",
   "imported": true,
-  "uuid": "89f105d7-0fb5-4444-b1da-7ecc4da796ec",
+  "uuid": "3488873e-5c8f-4ae5-8512-cb41e00178f9",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "MenuLayer"
+    "syncNodeName": "WidgetMoneySmall"
   }
 }
