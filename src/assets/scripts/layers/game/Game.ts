@@ -1,4 +1,5 @@
 import * as cc from 'cc';
+import * as env from "cc/env";
 import {WGEvent} from "../../WGEvent";
 import {LevelData} from "../../Core/LevelTypes";
 import {WordsTree} from "./WordsTree";
@@ -18,15 +19,13 @@ export class Game extends cc.Component {
     private charController: CharController = new CharController();
     private wordsTree: WordsTree = new WordsTree();
 
-    start() {
+    protected start() {
 
-        let charControllerNode = this.node.getChildByName('CharController') as cc.Node;
-        this.charController = charControllerNode.getComponent(CharController) as CharController;
-        if (!this.charController) throw new Error(`charController is not implemented`);
+        this.charController = findComponent(CharController, this.node) as CharController;
+        if (!this.charController) throw new Error(`CharController is not implemented in Game tree`);
 
-        let wordsTreeNode = this.node.getChildByName('WordsTree') as cc.Node;
-        this.wordsTree = wordsTreeNode.getComponent(WordsTree) as WordsTree;
-        if (!this.wordsTree) throw new Error(`wordsTree is not implemented`);
+        this.wordsTree = findComponent(WordsTree, this.node) as WordsTree;
+        if (!this.wordsTree) throw new Error(`WordsTree is not implemented in Game tree`);
 
         this.node.on(cc.Node.EventType.TOUCH_START, this.onLayerClicked, this);
         this.charController.node.on(WGEvent.WORD_CREATED, this.onWordCreated, this);
@@ -36,11 +35,13 @@ export class Game extends cc.Component {
         this.charController.node.on(WGEvent.HINT_OPEN_WORD, this.onHintOpenWord, this);
         this.wordsTree.node.on(WGEvent.RECT_CLICKED, this.onTreeRectClicked, this);
 
+        if (env.EDITOR) return;
+
         const levels = findComponent(Levels);
-        if (!levels) throw new Error(`levels not implemented`);
+        if (!levels) throw new Error(`Levels not implemented in scene`);
 
         const user = findComponent(User);
-        if (!user) throw new Error(`user not implemented`);
+        if (!user) throw new Error(`User not implemented in scene`);
 
         const level = levels.getLevelByIndex(user.levelIndex);
         if (!level) throw new Error(`no such level`);
@@ -49,7 +50,7 @@ export class Game extends cc.Component {
 
     }
 
-    initLevel(level: LevelData): void {
+    private initLevel(level: LevelData): void {
 
         this.isWon = false;
         this.levelData = level;
@@ -58,7 +59,7 @@ export class Game extends cc.Component {
 
     }
 
-    onWordCreated(word: string): void {
+    private onWordCreated(word: string): void {
         if (this.isWon) return;
 
         let isWordOpened = this.wordsTree.openWord(word);
@@ -96,7 +97,7 @@ export class Game extends cc.Component {
         if (this.wordsTree.isWin) this.onWin();
     }
 
-    onWin() {
+    private onWin() {
         this.isWon = true;
 
         cc.tween(this.node)
@@ -107,7 +108,7 @@ export class Game extends cc.Component {
             .start();
     }
 
-    onTreeRectClicked(x: number, y: number) {
+    private onTreeRectClicked(x: number, y: number) {
         if (this.isWon) return;
 
         if (this.wordsTree.isHintOpenDirectlyActive) {
@@ -119,7 +120,7 @@ export class Game extends cc.Component {
         }
     }
 
-    onLayerClicked(e: cc.Event) {
+    private onLayerClicked(e: cc.Event) {
         if (this.isWon) return;
 
         if (this.wordsTree.isHintOpenDirectlyActive) {
@@ -137,7 +138,7 @@ export class Game extends cc.Component {
         }
     }
 
-    clear() {
+    private clear() {
         this.isWon = false;
         this.levelData = undefined;
         this.wordsTree.clear();

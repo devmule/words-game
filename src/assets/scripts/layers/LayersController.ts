@@ -22,6 +22,9 @@ export class LayersController extends cc.Component {
     @property({visible: false, serializable: true})
     private _currentLayer: string = "";
 
+    @property({visible: true, serializable: true})
+    public initialLayer: string = "";
+
     @property
     public get currentLayer(): string {
         return this._currentLayer;
@@ -37,7 +40,7 @@ export class LayersController extends cc.Component {
 
 
     start() {
-        this.openLayerByName(this._currentLayer, true);
+        this.openLayerByName(this.initialLayer, true);
     }
 
     public openLayerByName(layerName: string, immediately = false) {
