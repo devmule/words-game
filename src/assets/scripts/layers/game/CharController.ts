@@ -1,6 +1,6 @@
 import * as cc from 'cc';
 import {CharButton} from "./CharButton";
-import {LevelData, WGEvent} from "../../Types";
+import {WGEvent} from "../../WGEvent";
 import * as env from "cc/env";
 
 const {ccclass, property} = cc._decorator;
@@ -11,83 +11,63 @@ const v2: cc.Vec2 = new cc.Vec2();
 @ccclass('CharController')
 export class CharController extends cc.Component {
 
+    private letters: string = "";
     private charButtons: CharButton[] = [];
     private selectedButtons: CharButton[] = [];
-    private _graphics: cc.Graphics | undefined;
-
-    private get graphics(): cc.Graphics {
-        if (this._graphics) return this._graphics;
-        let lineDrawNode = this.node.getChildByName("LineDraw") as cc.Node;
-        this._graphics = lineDrawNode.getComponent(cc.Graphics) as cc.Graphics;
-        return this._graphics;
-    }
-
-    private get hintText(): cc.Label {
-        let hintText = this.node.getChildByName("HintText") as cc.Node;
-        return hintText.getComponent(cc.Label) as cc.Label;
-    }
-
-    private get buttonsContainer(): cc.Node {
-        return this.node.getChildByName("ButtonsContainer") as cc.Node;
-    }
+    private graphics: cc.Graphics = new cc.Graphics();
+    private hintText: cc.Label = new cc.Label();
+    private buttonsContainer: cc.Node = new cc.Node();
 
     @property({type: cc.Prefab})
-    public textButtonPrefab: cc.Prefab | undefined;
+    private textButtonPrefab: cc.Prefab | undefined;
 
     @property({type: cc.CCInteger})
-    public centerOffset: number = 0;
+    private centerOffset: number = 0;
 
-    initLevel(levelData: LevelData) {
+    start() {
 
-        if (!this.node.hasEventListener(cc.Node.EventType.TOUCH_CANCEL))
-            this.node.on(cc.Node.EventType.TOUCH_CANCEL, this.touchEnd, this);
-        if (!this.node.hasEventListener(cc.Node.EventType.TOUCH_END))
-            this.node.on(cc.Node.EventType.TOUCH_END, this.touchEnd, this);
-        if (!this.node.hasEventListener(cc.Node.EventType.TOUCH_MOVE))
-            this.node.on(cc.Node.EventType.TOUCH_MOVE, this.touchMove, this);
+        let lineDrawNode = this.node.getChildByName("LineDraw");
+        this.graphics = lineDrawNode?.getComponent(cc.Graphics) as cc.Graphics;
+        if (!this.graphics) throw new Error(`LineDraw.Graphics is not implemented`);
 
-        let btnHintShuffle = this.node.getChildByName('HintShuffle') as cc.Node;
-        let btnHintOpenRandom = this.node.getChildByName('HintOpenRandom') as cc.Node;
-        let btnHintOpenInTree = this.node.getChildByName('HintOpenInTree') as cc.Node;
-        let btnHintOpenWord = this.node.getChildByName('HintOpenWord') as cc.Node;
-        if (!btnHintShuffle.hasEventListener(cc.Node.EventType.TOUCH_START))
-            btnHintShuffle.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(WGEvent.HINT_SHUFFLE), this);
-        if (!btnHintOpenRandom.hasEventListener(cc.Node.EventType.TOUCH_START))
-            btnHintOpenRandom.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(WGEvent.HINT_OP_CHAR_RAND), this);
-        if (!btnHintOpenInTree.hasEventListener(cc.Node.EventType.TOUCH_START))
-            btnHintOpenInTree.on(cc.Node.EventType.TOUCH_START, (e: cc.Event) => {
-                e.propagationStopped = e.propagationImmediateStopped = true;
-                this.node.emit(WGEvent.HINT_OP_IN_TREE)
-            }, this);
-        if (!btnHintOpenWord.hasEventListener(cc.Node.EventType.TOUCH_START))
-            btnHintOpenWord.on(cc.Node.EventType.TOUCH_START, () => this.node.emit(WGEvent.HINT_OPEN_WORD), this);
+        let hintText = this.node.getChildByName("HintText") as cc.Node;
+        this.hintText = hintText.getComponent(cc.Label) as cc.Label;
+        if (!this.hintText) throw new Error(`HintText is not implemented`);
 
+        this.buttonsContainer = this.node.getChildByName("ButtonsContainer") as cc.Node;
+        if (!this.buttonsContainer) throw new Error(`ButtonsContainer is not implemented`);
 
-        this.clear();
-        let letters = levelData.letters;
+        this.node.on(cc.Node.EventType.TOUCH_CANCEL, this.touchEnd, this);
+        this.node.on(cc.Node.EventType.TOUCH_END, this.touchEnd, this);
+        this.node.on(cc.Node.EventType.TOUCH_MOVE, this.touchMove, this);
+
 
         const pref = this.textButtonPrefab as unknown as cc.Prefab;
-
-        for (let i = 0; i < letters.length; i++) {
-
-            let btnNode = cc.instantiate(pref) as unknown as cc.Node;
+        for (let i = 0; i < this.letters.length; i++) {
+            let btnNode = cc.instantiate(pref) as cc.Node;
 
             let charBtn = btnNode.getComponent(CharButton) as CharButton;
             charBtn.activated = false;
-            charBtn.char = letters[i];
+            charBtn.char = this.letters[i];
 
             this.charButtons.push(charBtn);
             this.buttonsContainer.addChild(btnNode);
         }
 
         this.shuffleButtons();
+
     }
 
-    onButtonGestured(button: CharButton): void {
-        if (!button.activated) {
-            button.activated = true;
-            this.selectedButtons.push(button);
-        }
+    onDestroy() {
+
+        this.node.off(cc.Node.EventType.TOUCH_CANCEL, this.touchEnd, this);
+        this.node.off(cc.Node.EventType.TOUCH_END, this.touchEnd, this);
+        this.node.off(cc.Node.EventType.TOUCH_MOVE, this.touchMove, this);
+
+    }
+
+    initLetters(letters: string) {
+        this.letters = letters;
     }
 
     touchEnd(e: cc.EventTouch) {
@@ -197,8 +177,8 @@ export class CharController extends cc.Component {
     }
 
     clear() {
-        // удалить все кнопки и обнулить параметры
 
+        // удалить все кнопки и обнулить параметры
         let copy = this.buttonsContainer.children.map(c => c);
         for (let i = 0; i < copy.length; i++) {
             let child = copy[i];
@@ -208,6 +188,7 @@ export class CharController extends cc.Component {
         this.charButtons.length = 0;
         this.selectedButtons.length = 0;
         this.hintText.string = '';
+
     }
 
 }
