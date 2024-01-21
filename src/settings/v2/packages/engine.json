@@ -1,5 +1,5 @@
 {
-  "__version__": "1.0.5",
+  "__version__": "1.0.7",
   "modules": {
     "cache": {
       "base": {
@@ -87,21 +87,35 @@
       },
       "dragon-bones": {
         "_value": false
+      },
+      "animation": {
+        "_value": true
+      },
+      "skeletal-animation": {
+        "_value": true
+      },
+      "marionette": {
+        "_value": true
       }
     },
     "includeModules": [
+      "2d",
+      "animation",
+      "audio",
       "base",
       "gfx-webgl",
       "gfx-webgl2",
-      "2d",
-      "ui",
       "intersection-2d",
-      "profiler",
+      "light-probe",
+      "marionette",
       "particle-2d",
-      "audio",
+      "profiler",
+      "skeletal-animation",
+      "tween",
+      "ui",
       "video",
-      "webview",
-      "tween"
+      "websocket",
+      "webview"
     ],
     "noDeprecatedFeatures": {
       "value": false,

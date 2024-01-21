@@ -1,12 +1,15 @@
 {
-  "options": {
-    "web-desktop": {
-      "configID": "6bbb05",
-      "services": []
-    }
-  },
   "builder-options": {
     "configID": "6bbb05",
     "services": []
+  },
+  "__version__": "3.0.7",
+  "builder": {
+    "options": {
+      "web-desktop": {
+        "configID": "6bbb05",
+        "services": []
+      }
+    }
   }
 }
