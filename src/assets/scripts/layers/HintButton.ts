@@ -7,6 +7,18 @@ const BACKGROUND_NAME = "Background";
 @ccclass('HintButton')
 export class HintButton extends cc.Button {
 
+    @property({visible: false, serializable: true, type: cc.CCInteger, min: 0})
+    private _price: number = 0;
+
+    @property
+    private get price(): number {
+        return this._price;
+    }
+
+    private set price(value: number) {
+        if (value === this._price) return;
+        this._price = value;
+    }
 
     @property({visible: false, serializable: true})
     private _background: cc.SpriteFrame = new cc.SpriteFrame();

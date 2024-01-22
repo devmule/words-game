@@ -1,12 +1,12 @@
 import * as cc from 'cc';
 import * as env from "cc/env";
-import {WGEvent} from "../../WGEvent";
-import {LevelData} from "../../Core/LevelTypes";
+import {WGEvent} from "../WGEvent";
+import {LevelData} from "../Core/LevelTypes";
 import {WordsTree} from "./WordsTree";
 import {CharController} from "./CharController";
-import {findComponent} from "../../Core/Utils";
-import {Levels} from "../../Core/Levels";
-import {User} from "../../User";
+import {findComponent} from "../Core/Utils";
+import {Levels} from "../Core/Levels";
+import {User} from "../User";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;
 

@@ -8,22 +8,19 @@ export class CharButton extends cc.Component {
     private _char: string = "";
 
     private get textComponent(): cc.Label {
-        let textNode = this.node.getChildByName("Text") as cc.Node;
-        return textNode.getComponent(cc.Label) as cc.Label;
+        return this.node.getComponentInChildren(cc.Label)!;
     }
 
     private get textOutlineComponent(): cc.LabelOutline {
-        let textNode = this.node.getChildByName("Text") as cc.Node;
-        return textNode.getComponent(cc.LabelOutline) as cc.LabelOutline;
+        return this.node.getComponentInChildren(cc.LabelOutline)!;
     }
 
     private get backgroundSpriteComponent(): cc.Sprite {
-        let textNode = this.node.getChildByName("Background") as cc.Node;
-        return textNode.getComponent(cc.Sprite) as cc.Sprite;
+        return this.node.getComponentInChildren(cc.Sprite)!;
     }
 
     private get UITransformComponent(): cc.UITransform {
-        return this.node.getComponent(cc.UITransform) as cc.UITransform;
+        return this.node.getComponentInChildren(cc.UITransform)!;
     }
 
 
@@ -32,13 +29,10 @@ export class CharButton extends cc.Component {
 
     @property({type: cc.CCBoolean})
     public set activated(val: boolean) {
-
         if (this._activated === val) return;
         this._activated = val;
         this.updateActiveColor();
-
         this.doShake();
-
     }
 
     public get activated(): boolean {

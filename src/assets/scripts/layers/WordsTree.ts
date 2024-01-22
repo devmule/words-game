@@ -1,7 +1,7 @@
 import * as cc from 'cc';
 import * as env from "cc/env";
-import {WGEvent} from "../../WGEvent";
-import {LevelData, Align, InTreeWord} from "../../Core/LevelTypes";
+import {WGEvent} from "../WGEvent";
+import {LevelData, Align, InTreeWord} from "../Core/LevelTypes";
 import {CharRect} from "./CharRect";
 
 const {ccclass, property, executeInEditMode} = cc._decorator;

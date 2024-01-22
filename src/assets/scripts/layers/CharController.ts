@@ -1,6 +1,6 @@
 import * as cc from 'cc';
 import {CharButton} from "./CharButton";
-import {WGEvent} from "../../WGEvent";
+import {WGEvent} from "../WGEvent";
 import * as env from "cc/env";
 
 const {ccclass, property} = cc._decorator;
