@@ -1,0 +1,26 @@
+import * as cc from 'cc';
+
+
+/**
+ * 
+ * Создается сам енумератор. Важно - не использовать текстовые значения
+ * <%UnderscoreCaseClassName%>
+ * <%CamelCaseClassName%>
+ * <%Author%>
+ * <%DateTime%>
+ * <%FileBasename%>
+ * <%FileBasenameNoExtension%>
+ * <%URL%>
+ * <%ManualUrl%>
+ *
+ */
+
+export enum <%CamelCaseClassName%> {
+    ONE,
+    TWO,
+}
+
+/**
+ * Енумератор учитывается кокосом
+ */
+cc.Enum(<%CamelCaseClassName%>);
